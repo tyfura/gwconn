@@ -8,6 +8,7 @@ package gwconn
 
 import (
 	context "context"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -35,10 +36,10 @@ type BridgeApiClient interface {
 	Register(ctx context.Context, in *BridgeRegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 	Login(ctx context.Context, in *BridgeLoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (BridgeApi_GetTargetStreamClient, error)
-	CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*GeneralResp, error)
-	SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*GeneralResp, error)
-	SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*GeneralResp, error)
+	CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error)
+	SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*empty.Empty, error)
+	SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*empty.Empty, error)
+	SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type bridgeApiClient struct {
@@ -99,8 +100,8 @@ func (x *bridgeApiGetTargetStreamClient) Recv() (*BridgeTarget, error) {
 	return m, nil
 }
 
-func (c *bridgeApiClient) CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
+func (c *bridgeApiClient) CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BridgeApi_CallDnsAcme_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -108,8 +109,8 @@ func (c *bridgeApiClient) CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts 
 	return out, nil
 }
 
-func (c *bridgeApiClient) SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
+func (c *bridgeApiClient) SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BridgeApi_SendSystemStat_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -117,8 +118,8 @@ func (c *bridgeApiClient) SendSystemStat(ctx context.Context, in *SystemStat, op
 	return out, nil
 }
 
-func (c *bridgeApiClient) SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
+func (c *bridgeApiClient) SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BridgeApi_SendRouteInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -126,8 +127,8 @@ func (c *bridgeApiClient) SendRouteInfo(ctx context.Context, in *RouteStat, opts
 	return out, nil
 }
 
-func (c *bridgeApiClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
+func (c *bridgeApiClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, BridgeApi_SendLog_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -142,10 +143,10 @@ type BridgeApiServer interface {
 	Register(context.Context, *BridgeRegisterReq) (*RegisterResp, error)
 	Login(context.Context, *BridgeLoginReq) (*LoginResp, error)
 	GetTargetStream(*JoinStreamReq, BridgeApi_GetTargetStreamServer) error
-	CallDnsAcme(context.Context, *DnsAcmeReq) (*GeneralResp, error)
-	SendSystemStat(context.Context, *SystemStat) (*GeneralResp, error)
-	SendRouteInfo(context.Context, *RouteStat) (*GeneralResp, error)
-	SendLog(context.Context, *LogLineMsg) (*GeneralResp, error)
+	CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error)
+	SendSystemStat(context.Context, *SystemStat) (*empty.Empty, error)
+	SendRouteInfo(context.Context, *RouteStat) (*empty.Empty, error)
+	SendLog(context.Context, *LogLineMsg) (*empty.Empty, error)
 	mustEmbedUnimplementedBridgeApiServer()
 }
 
@@ -162,16 +163,16 @@ func (UnimplementedBridgeApiServer) Login(context.Context, *BridgeLoginReq) (*Lo
 func (UnimplementedBridgeApiServer) GetTargetStream(*JoinStreamReq, BridgeApi_GetTargetStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetTargetStream not implemented")
 }
-func (UnimplementedBridgeApiServer) CallDnsAcme(context.Context, *DnsAcmeReq) (*GeneralResp, error) {
+func (UnimplementedBridgeApiServer) CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CallDnsAcme not implemented")
 }
-func (UnimplementedBridgeApiServer) SendSystemStat(context.Context, *SystemStat) (*GeneralResp, error) {
+func (UnimplementedBridgeApiServer) SendSystemStat(context.Context, *SystemStat) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendSystemStat not implemented")
 }
-func (UnimplementedBridgeApiServer) SendRouteInfo(context.Context, *RouteStat) (*GeneralResp, error) {
+func (UnimplementedBridgeApiServer) SendRouteInfo(context.Context, *RouteStat) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendRouteInfo not implemented")
 }
-func (UnimplementedBridgeApiServer) SendLog(context.Context, *LogLineMsg) (*GeneralResp, error) {
+func (UnimplementedBridgeApiServer) SendLog(context.Context, *LogLineMsg) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendLog not implemented")
 }
 func (UnimplementedBridgeApiServer) mustEmbedUnimplementedBridgeApiServer() {}
