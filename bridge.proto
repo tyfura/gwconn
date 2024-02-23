@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+option go_package = "github.com/tyfura/gwconn";
+option java_multiple_files = true;
+option java_package = "io.tyft.gwconn";
+option java_outer_classname = "";
+
+package gwconn;
+
+// Interface exported by the server.
+service BridgeApi {
+  rpc Register(BridgeRegisterReq) returns (RegisterResp) {} 
+  rpc Login(BridgeLoginReq) returns (LoginResp) {}
+  rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
+  rpc CallDnsAcme(DnsAcmeReq) returns (GeneralResp) {}
+  rpc SendSystemStat(SystemStat) returns (GeneralResp) {}
+  rpc SendRouteInfo(RouteStat) returns (GeneralResp) {}
+  rpc SendLog(LogLineMsg) returns (GeneralResp) {}
+//  rpc GetVpnCfg() returns (GeneralResp) {}
+}
+
+message BridgeRegisterReq {
+    string bridgeId = 1;
+    string hostname = 2;
+    string os = 3;
+    string arch = 4;
+}
+
+message RegisterResp {
+  bool isOk = 1;
+  string key = 2;
+  string err = 3;
+}
+
+message BridgeLoginReq {
+    string bridgeId = 1;
+    string key = 2;
+}
+
+message LoginResp {
+    string token = 1;
+}
+
+message JoinStreamReq {}
+
+message BridgeTarget {
+  uint32 act = 1;
+  string targeId = 2;
+  string fqdn = 3;
+  string addr = 4;
+  uint32 typ = 5;
+}
+
+message GeneralResp {
+  bool isOk = 1;
+  string err = 2;
+}
+
+message DnsAcmeReq {
+  bool isSet = 1;
+  string fqdn = 2;
+  string val = 3;
+}
+
+message SystemStat {
+  repeated uint32 cpustat = 1;
+  uint64 maxRam = 2;
+  uint64 ramBuf = 3;
+  uint64 ramUsed = 4;
+  uint64 maxDisk = 5;
+  uint64 diskUsed = 6;
+  uint32 conns = 7;
+}
+
+message RouteStat {
+  string routeId = 1;
+  uint64 conns = 2;
+  uint64 trafOut = 3;
+  uint64 trafOutDelta = 4;
+  uint64 trafIn = 5;
+  uint64 trafInDelta = 6;
+}
+
+message LogLineMsg {
+  string taskId = 1;
+  string line = 2;
+}
