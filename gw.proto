@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option go_package = "github.com/tyfura/gwconn";
+option java_multiple_files = true;
+option java_package = "io.tyft.gwconn";
+option java_outer_classname = "";
+
+import "google/protobuf/empty.proto";
+import "common.proto";
+package gwconn;
+
+// Interface exported by the server.
+service GwApi {
+  rpc GetNewBridges(google.protobuf.Empty) returns (NewBridgeList) {} 
+  rpc AckBridge(AcceptBridge) returns (google.protobuf.Empty) {}
+//  rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
+//  rpc CallDnsAcme(DnsAcmeReq) returns (google.protobuf.Empty) {}
+//  rpc SendSystemStat(SystemStat) returns (google.protobuf.Empty) {}
+//  rpc SendRouteInfo(RouteStat) returns (google.protobuf.Empty) {}
+//  rpc SendLog(LogLineMsg) returns (google.protobuf.Empty) {}
+//  rpc GetVpnCfg() returns (GeneralResp) {}
+}
+
+
+message NewBridgeList {
+    repeated BridgeInfo bridges = 1;
+}
+
+message AcceptBridge {
+  string id = 1;
+}

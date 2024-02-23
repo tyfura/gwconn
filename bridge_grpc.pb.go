@@ -33,7 +33,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BridgeApiClient interface {
-	Register(ctx context.Context, in *BridgeRegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
+	Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
 	Login(ctx context.Context, in *BridgeLoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (BridgeApi_GetTargetStreamClient, error)
 	CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -50,7 +50,7 @@ func NewBridgeApiClient(cc grpc.ClientConnInterface) BridgeApiClient {
 	return &bridgeApiClient{cc}
 }
 
-func (c *bridgeApiClient) Register(ctx context.Context, in *BridgeRegisterReq, opts ...grpc.CallOption) (*RegisterResp, error) {
+func (c *bridgeApiClient) Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error) {
 	out := new(RegisterResp)
 	err := c.cc.Invoke(ctx, BridgeApi_Register_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -140,7 +140,7 @@ func (c *bridgeApiClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...g
 // All implementations must embed UnimplementedBridgeApiServer
 // for forward compatibility
 type BridgeApiServer interface {
-	Register(context.Context, *BridgeRegisterReq) (*RegisterResp, error)
+	Register(context.Context, *BridgeInfo) (*RegisterResp, error)
 	Login(context.Context, *BridgeLoginReq) (*LoginResp, error)
 	GetTargetStream(*JoinStreamReq, BridgeApi_GetTargetStreamServer) error
 	CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error)
@@ -154,7 +154,7 @@ type BridgeApiServer interface {
 type UnimplementedBridgeApiServer struct {
 }
 
-func (UnimplementedBridgeApiServer) Register(context.Context, *BridgeRegisterReq) (*RegisterResp, error) {
+func (UnimplementedBridgeApiServer) Register(context.Context, *BridgeInfo) (*RegisterResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedBridgeApiServer) Login(context.Context, *BridgeLoginReq) (*LoginResp, error) {
@@ -189,7 +189,7 @@ func RegisterBridgeApiServer(s grpc.ServiceRegistrar, srv BridgeApiServer) {
 }
 
 func _BridgeApi_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BridgeRegisterReq)
+	in := new(BridgeInfo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -201,7 +201,7 @@ func _BridgeApi_Register_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: BridgeApi_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeApiServer).Register(ctx, req.(*BridgeRegisterReq))
+		return srv.(BridgeApiServer).Register(ctx, req.(*BridgeInfo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
