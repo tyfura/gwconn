@@ -12,7 +12,6 @@ package gwconn;
 // Interface exported by the server.
 service BridgeApi {
   rpc Register(BridgeInfo) returns (RegisterResp) {} 
-  rpc Login(BridgeLoginReq) returns (LoginResp) {}
   rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
   rpc CallDnsAcme(DnsAcmeReq) returns (google.protobuf.Empty) {}
   rpc SendSystemStat(SystemStat) returns (google.protobuf.Empty) {}
@@ -25,15 +24,6 @@ service BridgeApi {
 
 message RegisterResp {
   string key = 2;
-}
-
-message BridgeLoginReq {
-    string bridgeId = 1;
-    string key = 2;
-}
-
-message LoginResp {
-    string token = 1;
 }
 
 message JoinStreamReq {}

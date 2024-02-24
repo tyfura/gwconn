@@ -21,7 +21,6 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	BridgeApi_Register_FullMethodName        = "/gwconn.BridgeApi/Register"
-	BridgeApi_Login_FullMethodName           = "/gwconn.BridgeApi/Login"
 	BridgeApi_GetTargetStream_FullMethodName = "/gwconn.BridgeApi/GetTargetStream"
 	BridgeApi_CallDnsAcme_FullMethodName     = "/gwconn.BridgeApi/CallDnsAcme"
 	BridgeApi_SendSystemStat_FullMethodName  = "/gwconn.BridgeApi/SendSystemStat"
@@ -34,7 +33,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BridgeApiClient interface {
 	Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
-	Login(ctx context.Context, in *BridgeLoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (BridgeApi_GetTargetStreamClient, error)
 	CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error)
 	SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -53,15 +51,6 @@ func NewBridgeApiClient(cc grpc.ClientConnInterface) BridgeApiClient {
 func (c *bridgeApiClient) Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error) {
 	out := new(RegisterResp)
 	err := c.cc.Invoke(ctx, BridgeApi_Register_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *bridgeApiClient) Login(ctx context.Context, in *BridgeLoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
-	out := new(LoginResp)
-	err := c.cc.Invoke(ctx, BridgeApi_Login_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -141,7 +130,6 @@ func (c *bridgeApiClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...g
 // for forward compatibility
 type BridgeApiServer interface {
 	Register(context.Context, *BridgeInfo) (*RegisterResp, error)
-	Login(context.Context, *BridgeLoginReq) (*LoginResp, error)
 	GetTargetStream(*JoinStreamReq, BridgeApi_GetTargetStreamServer) error
 	CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error)
 	SendSystemStat(context.Context, *SystemStat) (*empty.Empty, error)
@@ -156,9 +144,6 @@ type UnimplementedBridgeApiServer struct {
 
 func (UnimplementedBridgeApiServer) Register(context.Context, *BridgeInfo) (*RegisterResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
-}
-func (UnimplementedBridgeApiServer) Login(context.Context, *BridgeLoginReq) (*LoginResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedBridgeApiServer) GetTargetStream(*JoinStreamReq, BridgeApi_GetTargetStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetTargetStream not implemented")
@@ -202,24 +187,6 @@ func _BridgeApi_Register_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BridgeApiServer).Register(ctx, req.(*BridgeInfo))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _BridgeApi_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BridgeLoginReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BridgeApiServer).Login(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: BridgeApi_Login_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeApiServer).Login(ctx, req.(*BridgeLoginReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -327,10 +294,6 @@ var BridgeApi_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Register",
 			Handler:    _BridgeApi_Register_Handler,
-		},
-		{
-			MethodName: "Login",
-			Handler:    _BridgeApi_Login_Handler,
 		},
 		{
 			MethodName: "CallDnsAcme",
