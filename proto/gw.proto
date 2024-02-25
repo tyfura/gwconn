@@ -6,7 +6,7 @@ option java_package = "io.tyft.gwconn";
 option java_outer_classname = "";
 
 import "google/protobuf/empty.proto";
-import "common.proto";
+import "bridge.proto";
 package gwconn;
 
 // Interface exported by the server.

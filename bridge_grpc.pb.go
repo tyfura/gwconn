@@ -20,49 +20,49 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	BridgeApi_Register_FullMethodName        = "/gwconn.BridgeApi/Register"
-	BridgeApi_GetTargetStream_FullMethodName = "/gwconn.BridgeApi/GetTargetStream"
-	BridgeApi_CallDnsAcme_FullMethodName     = "/gwconn.BridgeApi/CallDnsAcme"
-	BridgeApi_SendSystemStat_FullMethodName  = "/gwconn.BridgeApi/SendSystemStat"
-	BridgeApi_SendRouteInfo_FullMethodName   = "/gwconn.BridgeApi/SendRouteInfo"
-	BridgeApi_SendLog_FullMethodName         = "/gwconn.BridgeApi/SendLog"
+	Bridge_Register_FullMethodName        = "/gwconn.Bridge/Register"
+	Bridge_GetTargetStream_FullMethodName = "/gwconn.Bridge/GetTargetStream"
+	Bridge_CallDnsAcme_FullMethodName     = "/gwconn.Bridge/CallDnsAcme"
+	Bridge_SendSystemStat_FullMethodName  = "/gwconn.Bridge/SendSystemStat"
+	Bridge_SendRouteInfo_FullMethodName   = "/gwconn.Bridge/SendRouteInfo"
+	Bridge_SendLog_FullMethodName         = "/gwconn.Bridge/SendLog"
 )
 
-// BridgeApiClient is the client API for BridgeApi service.
+// BridgeClient is the client API for Bridge service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type BridgeApiClient interface {
+type BridgeClient interface {
 	Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
-	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (BridgeApi_GetTargetStreamClient, error)
+	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_GetTargetStreamClient, error)
 	CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error)
 	SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*empty.Empty, error)
 	SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*empty.Empty, error)
 	SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
-type bridgeApiClient struct {
+type bridgeClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewBridgeApiClient(cc grpc.ClientConnInterface) BridgeApiClient {
-	return &bridgeApiClient{cc}
+func NewBridgeClient(cc grpc.ClientConnInterface) BridgeClient {
+	return &bridgeClient{cc}
 }
 
-func (c *bridgeApiClient) Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error) {
+func (c *bridgeClient) Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error) {
 	out := new(RegisterResp)
-	err := c.cc.Invoke(ctx, BridgeApi_Register_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bridge_Register_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *bridgeApiClient) GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (BridgeApi_GetTargetStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &BridgeApi_ServiceDesc.Streams[0], BridgeApi_GetTargetStream_FullMethodName, opts...)
+func (c *bridgeClient) GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_GetTargetStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &Bridge_ServiceDesc.Streams[0], Bridge_GetTargetStream_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &bridgeApiGetTargetStreamClient{stream}
+	x := &bridgeGetTargetStreamClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -72,16 +72,16 @@ func (c *bridgeApiClient) GetTargetStream(ctx context.Context, in *JoinStreamReq
 	return x, nil
 }
 
-type BridgeApi_GetTargetStreamClient interface {
+type Bridge_GetTargetStreamClient interface {
 	Recv() (*BridgeTarget, error)
 	grpc.ClientStream
 }
 
-type bridgeApiGetTargetStreamClient struct {
+type bridgeGetTargetStreamClient struct {
 	grpc.ClientStream
 }
 
-func (x *bridgeApiGetTargetStreamClient) Recv() (*BridgeTarget, error) {
+func (x *bridgeGetTargetStreamClient) Recv() (*BridgeTarget, error) {
 	m := new(BridgeTarget)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -89,233 +89,233 @@ func (x *bridgeApiGetTargetStreamClient) Recv() (*BridgeTarget, error) {
 	return m, nil
 }
 
-func (c *bridgeApiClient) CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bridgeClient) CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, BridgeApi_CallDnsAcme_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bridge_CallDnsAcme_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *bridgeApiClient) SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bridgeClient) SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, BridgeApi_SendSystemStat_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bridge_SendSystemStat_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *bridgeApiClient) SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bridgeClient) SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, BridgeApi_SendRouteInfo_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bridge_SendRouteInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *bridgeApiClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*empty.Empty, error) {
+func (c *bridgeClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, BridgeApi_SendLog_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bridge_SendLog_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// BridgeApiServer is the server API for BridgeApi service.
-// All implementations must embed UnimplementedBridgeApiServer
+// BridgeServer is the server API for Bridge service.
+// All implementations must embed UnimplementedBridgeServer
 // for forward compatibility
-type BridgeApiServer interface {
+type BridgeServer interface {
 	Register(context.Context, *BridgeInfo) (*RegisterResp, error)
-	GetTargetStream(*JoinStreamReq, BridgeApi_GetTargetStreamServer) error
+	GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error
 	CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error)
 	SendSystemStat(context.Context, *SystemStat) (*empty.Empty, error)
 	SendRouteInfo(context.Context, *RouteStat) (*empty.Empty, error)
 	SendLog(context.Context, *LogLineMsg) (*empty.Empty, error)
-	mustEmbedUnimplementedBridgeApiServer()
+	mustEmbedUnimplementedBridgeServer()
 }
 
-// UnimplementedBridgeApiServer must be embedded to have forward compatible implementations.
-type UnimplementedBridgeApiServer struct {
+// UnimplementedBridgeServer must be embedded to have forward compatible implementations.
+type UnimplementedBridgeServer struct {
 }
 
-func (UnimplementedBridgeApiServer) Register(context.Context, *BridgeInfo) (*RegisterResp, error) {
+func (UnimplementedBridgeServer) Register(context.Context, *BridgeInfo) (*RegisterResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedBridgeApiServer) GetTargetStream(*JoinStreamReq, BridgeApi_GetTargetStreamServer) error {
+func (UnimplementedBridgeServer) GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetTargetStream not implemented")
 }
-func (UnimplementedBridgeApiServer) CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error) {
+func (UnimplementedBridgeServer) CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CallDnsAcme not implemented")
 }
-func (UnimplementedBridgeApiServer) SendSystemStat(context.Context, *SystemStat) (*empty.Empty, error) {
+func (UnimplementedBridgeServer) SendSystemStat(context.Context, *SystemStat) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendSystemStat not implemented")
 }
-func (UnimplementedBridgeApiServer) SendRouteInfo(context.Context, *RouteStat) (*empty.Empty, error) {
+func (UnimplementedBridgeServer) SendRouteInfo(context.Context, *RouteStat) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendRouteInfo not implemented")
 }
-func (UnimplementedBridgeApiServer) SendLog(context.Context, *LogLineMsg) (*empty.Empty, error) {
+func (UnimplementedBridgeServer) SendLog(context.Context, *LogLineMsg) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendLog not implemented")
 }
-func (UnimplementedBridgeApiServer) mustEmbedUnimplementedBridgeApiServer() {}
+func (UnimplementedBridgeServer) mustEmbedUnimplementedBridgeServer() {}
 
-// UnsafeBridgeApiServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to BridgeApiServer will
+// UnsafeBridgeServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to BridgeServer will
 // result in compilation errors.
-type UnsafeBridgeApiServer interface {
-	mustEmbedUnimplementedBridgeApiServer()
+type UnsafeBridgeServer interface {
+	mustEmbedUnimplementedBridgeServer()
 }
 
-func RegisterBridgeApiServer(s grpc.ServiceRegistrar, srv BridgeApiServer) {
-	s.RegisterService(&BridgeApi_ServiceDesc, srv)
+func RegisterBridgeServer(s grpc.ServiceRegistrar, srv BridgeServer) {
+	s.RegisterService(&Bridge_ServiceDesc, srv)
 }
 
-func _BridgeApi_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Bridge_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BridgeInfo)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeApiServer).Register(ctx, in)
+		return srv.(BridgeServer).Register(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BridgeApi_Register_FullMethodName,
+		FullMethod: Bridge_Register_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeApiServer).Register(ctx, req.(*BridgeInfo))
+		return srv.(BridgeServer).Register(ctx, req.(*BridgeInfo))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BridgeApi_GetTargetStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _Bridge_GetTargetStream_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(JoinStreamReq)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(BridgeApiServer).GetTargetStream(m, &bridgeApiGetTargetStreamServer{stream})
+	return srv.(BridgeServer).GetTargetStream(m, &bridgeGetTargetStreamServer{stream})
 }
 
-type BridgeApi_GetTargetStreamServer interface {
+type Bridge_GetTargetStreamServer interface {
 	Send(*BridgeTarget) error
 	grpc.ServerStream
 }
 
-type bridgeApiGetTargetStreamServer struct {
+type bridgeGetTargetStreamServer struct {
 	grpc.ServerStream
 }
 
-func (x *bridgeApiGetTargetStreamServer) Send(m *BridgeTarget) error {
+func (x *bridgeGetTargetStreamServer) Send(m *BridgeTarget) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _BridgeApi_CallDnsAcme_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Bridge_CallDnsAcme_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DnsAcmeReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeApiServer).CallDnsAcme(ctx, in)
+		return srv.(BridgeServer).CallDnsAcme(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BridgeApi_CallDnsAcme_FullMethodName,
+		FullMethod: Bridge_CallDnsAcme_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeApiServer).CallDnsAcme(ctx, req.(*DnsAcmeReq))
+		return srv.(BridgeServer).CallDnsAcme(ctx, req.(*DnsAcmeReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BridgeApi_SendSystemStat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Bridge_SendSystemStat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SystemStat)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeApiServer).SendSystemStat(ctx, in)
+		return srv.(BridgeServer).SendSystemStat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BridgeApi_SendSystemStat_FullMethodName,
+		FullMethod: Bridge_SendSystemStat_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeApiServer).SendSystemStat(ctx, req.(*SystemStat))
+		return srv.(BridgeServer).SendSystemStat(ctx, req.(*SystemStat))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BridgeApi_SendRouteInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Bridge_SendRouteInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RouteStat)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeApiServer).SendRouteInfo(ctx, in)
+		return srv.(BridgeServer).SendRouteInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BridgeApi_SendRouteInfo_FullMethodName,
+		FullMethod: Bridge_SendRouteInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeApiServer).SendRouteInfo(ctx, req.(*RouteStat))
+		return srv.(BridgeServer).SendRouteInfo(ctx, req.(*RouteStat))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _BridgeApi_SendLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Bridge_SendLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LogLineMsg)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeApiServer).SendLog(ctx, in)
+		return srv.(BridgeServer).SendLog(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: BridgeApi_SendLog_FullMethodName,
+		FullMethod: Bridge_SendLog_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeApiServer).SendLog(ctx, req.(*LogLineMsg))
+		return srv.(BridgeServer).SendLog(ctx, req.(*LogLineMsg))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// BridgeApi_ServiceDesc is the grpc.ServiceDesc for BridgeApi service.
+// Bridge_ServiceDesc is the grpc.ServiceDesc for Bridge service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var BridgeApi_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "gwconn.BridgeApi",
-	HandlerType: (*BridgeApiServer)(nil),
+var Bridge_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "gwconn.Bridge",
+	HandlerType: (*BridgeServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "Register",
-			Handler:    _BridgeApi_Register_Handler,
+			Handler:    _Bridge_Register_Handler,
 		},
 		{
 			MethodName: "CallDnsAcme",
-			Handler:    _BridgeApi_CallDnsAcme_Handler,
+			Handler:    _Bridge_CallDnsAcme_Handler,
 		},
 		{
 			MethodName: "SendSystemStat",
-			Handler:    _BridgeApi_SendSystemStat_Handler,
+			Handler:    _Bridge_SendSystemStat_Handler,
 		},
 		{
 			MethodName: "SendRouteInfo",
-			Handler:    _BridgeApi_SendRouteInfo_Handler,
+			Handler:    _Bridge_SendRouteInfo_Handler,
 		},
 		{
 			MethodName: "SendLog",
-			Handler:    _BridgeApi_SendLog_Handler,
+			Handler:    _Bridge_SendLog_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "GetTargetStream",
-			Handler:       _BridgeApi_GetTargetStream_Handler,
+			Handler:       _Bridge_GetTargetStream_Handler,
 			ServerStreams: true,
 		},
 	},
