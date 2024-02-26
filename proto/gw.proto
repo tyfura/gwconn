@@ -10,7 +10,7 @@ import "bridge.proto";
 package gwconn;
 
 // Interface exported by the server.
-service GwApi {
+service GW {
   rpc GetNewBridges(google.protobuf.Empty) returns (NewBridgeList) {} 
   rpc AckBridge(AcceptBridge) returns (google.protobuf.Empty) {}
 //  rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
