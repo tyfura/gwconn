@@ -20,6 +20,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	Bridge_Login_FullMethodName           = "/gwconn.Bridge/Login"
 	Bridge_Register_FullMethodName        = "/gwconn.Bridge/Register"
 	Bridge_GetTargetStream_FullMethodName = "/gwconn.Bridge/GetTargetStream"
 	Bridge_CallDnsAcme_FullMethodName     = "/gwconn.Bridge/CallDnsAcme"
@@ -32,6 +33,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BridgeClient interface {
+	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
 	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_GetTargetStreamClient, error)
 	CallDnsAcme(ctx context.Context, in *DnsAcmeReq, opts ...grpc.CallOption) (*empty.Empty, error)
@@ -46,6 +48,15 @@ type bridgeClient struct {
 
 func NewBridgeClient(cc grpc.ClientConnInterface) BridgeClient {
 	return &bridgeClient{cc}
+}
+
+func (c *bridgeClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
+	out := new(LoginResp)
+	err := c.cc.Invoke(ctx, Bridge_Login_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *bridgeClient) Register(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error) {
@@ -129,6 +140,7 @@ func (c *bridgeClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc
 // All implementations must embed UnimplementedBridgeServer
 // for forward compatibility
 type BridgeServer interface {
+	Login(context.Context, *LoginReq) (*LoginResp, error)
 	Register(context.Context, *BridgeInfo) (*RegisterResp, error)
 	GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error
 	CallDnsAcme(context.Context, *DnsAcmeReq) (*empty.Empty, error)
@@ -142,6 +154,9 @@ type BridgeServer interface {
 type UnimplementedBridgeServer struct {
 }
 
+func (UnimplementedBridgeServer) Login(context.Context, *LoginReq) (*LoginResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
 func (UnimplementedBridgeServer) Register(context.Context, *BridgeInfo) (*RegisterResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
@@ -171,6 +186,24 @@ type UnsafeBridgeServer interface {
 
 func RegisterBridgeServer(s grpc.ServiceRegistrar, srv BridgeServer) {
 	s.RegisterService(&Bridge_ServiceDesc, srv)
+}
+
+func _Bridge_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BridgeServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bridge_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BridgeServer).Login(ctx, req.(*LoginReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Bridge_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -291,6 +324,10 @@ var Bridge_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "gwconn.Bridge",
 	HandlerType: (*BridgeServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Login",
+			Handler:    _Bridge_Login_Handler,
+		},
 		{
 			MethodName: "Register",
 			Handler:    _Bridge_Register_Handler,

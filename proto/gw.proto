@@ -11,8 +11,10 @@ package gwconn;
 
 // Interface exported by the server.
 service GW {
+  rpc Login(LoginReq) returns (LoginResp) {}
   rpc GetNewBridges(google.protobuf.Empty) returns (NewBridgeList) {} 
   rpc AckBridge(AcceptBridge) returns (google.protobuf.Empty) {}
+
 //  rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
 //  rpc CallDnsAcme(DnsAcmeReq) returns (google.protobuf.Empty) {}
 //  rpc SendSystemStat(SystemStat) returns (google.protobuf.Empty) {}

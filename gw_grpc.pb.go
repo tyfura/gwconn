@@ -20,6 +20,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	GW_Login_FullMethodName         = "/gwconn.GW/Login"
 	GW_GetNewBridges_FullMethodName = "/gwconn.GW/GetNewBridges"
 	GW_AckBridge_FullMethodName     = "/gwconn.GW/AckBridge"
 )
@@ -28,6 +29,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GWClient interface {
+	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	GetNewBridges(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*NewBridgeList, error)
 	AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc.CallOption) (*empty.Empty, error)
 }
@@ -38,6 +40,15 @@ type gWClient struct {
 
 func NewGWClient(cc grpc.ClientConnInterface) GWClient {
 	return &gWClient{cc}
+}
+
+func (c *gWClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error) {
+	out := new(LoginResp)
+	err := c.cc.Invoke(ctx, GW_Login_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *gWClient) GetNewBridges(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*NewBridgeList, error) {
@@ -62,6 +73,7 @@ func (c *gWClient) AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc
 // All implementations must embed UnimplementedGWServer
 // for forward compatibility
 type GWServer interface {
+	Login(context.Context, *LoginReq) (*LoginResp, error)
 	GetNewBridges(context.Context, *empty.Empty) (*NewBridgeList, error)
 	AckBridge(context.Context, *AcceptBridge) (*empty.Empty, error)
 	mustEmbedUnimplementedGWServer()
@@ -71,6 +83,9 @@ type GWServer interface {
 type UnimplementedGWServer struct {
 }
 
+func (UnimplementedGWServer) Login(context.Context, *LoginReq) (*LoginResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
 func (UnimplementedGWServer) GetNewBridges(context.Context, *empty.Empty) (*NewBridgeList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNewBridges not implemented")
 }
@@ -88,6 +103,24 @@ type UnsafeGWServer interface {
 
 func RegisterGWServer(s grpc.ServiceRegistrar, srv GWServer) {
 	s.RegisterService(&GW_ServiceDesc, srv)
+}
+
+func _GW_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).Login(ctx, req.(*LoginReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _GW_GetNewBridges_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -133,6 +166,10 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "gwconn.GW",
 	HandlerType: (*GWServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Login",
+			Handler:    _GW_Login_Handler,
+		},
 		{
 			MethodName: "GetNewBridges",
 			Handler:    _GW_GetNewBridges_Handler,
