@@ -13,7 +13,7 @@ service Bridge {
   rpc LoginBridge(LoginReq) returns (LoginResp) {}
   rpc RegisterBridge(BridgeInfo) returns (RegisterResp) {} 
   rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
-  rpc CallDnsAcme(DnsAcmeReq) returns (GeneralResp) {}
+  rpc DnsAcmeChanger(DnsChangerReq) returns (GeneralResp) {}
   rpc SendSystemStat(SystemStat) returns (GeneralResp) {}
   rpc SendRouteInfo(RouteStat) returns (GeneralResp) {}
   rpc SendLog(LogLineMsg) returns (GeneralResp) {}
@@ -37,7 +37,7 @@ message BridgeTarget {
 }
 
 
-message DnsAcmeReq {
+message DnsChangerReq {
   bool isSet = 1;
   string fqdn = 2;
   string val = 3;
