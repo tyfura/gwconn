@@ -13,13 +13,7 @@ service GW {
   rpc Login(LoginReq) returns (LoginResp) {}
   rpc GetNewBridges(ListReq) returns (NewBridgeList) {} 
   rpc AckBridge(AcceptBridge) returns (GeneralResp) {}
-
-//  rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
-//  rpc CallDnsAcme(DnsAcmeReq) returns (google.protobuf.Empty) {}
-//  rpc SendSystemStat(SystemStat) returns (google.protobuf.Empty) {}
-//  rpc SendRouteInfo(RouteStat) returns (google.protobuf.Empty) {}
-//  rpc SendLog(LogLineMsg) returns (google.protobuf.Empty) {}
-//  rpc GetVpnCfg() returns (GeneralResp) {}
+  rpc ManageDomains(ManageDomainReq) returns (GeneralResp) {}
 }
 
 
@@ -29,4 +23,9 @@ message NewBridgeList {
 
 message AcceptBridge {
   string id = 1;
+}
+
+message ManageDomainReq {
+  bool isAdd = 1;
+  string fqdn = 2;
 }

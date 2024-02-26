@@ -22,6 +22,7 @@ const (
 	GW_Login_FullMethodName         = "/gwconn.GW/Login"
 	GW_GetNewBridges_FullMethodName = "/gwconn.GW/GetNewBridges"
 	GW_AckBridge_FullMethodName     = "/gwconn.GW/AckBridge"
+	GW_ManageDomains_FullMethodName = "/gwconn.GW/ManageDomains"
 )
 
 // GWClient is the client API for GW service.
@@ -31,6 +32,7 @@ type GWClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	GetNewBridges(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*NewBridgeList, error)
 	AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc.CallOption) (*GeneralResp, error)
+	ManageDomains(ctx context.Context, in *ManageDomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
 type gWClient struct {
@@ -68,6 +70,15 @@ func (c *gWClient) AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc
 	return out, nil
 }
 
+func (c *gWClient) ManageDomains(ctx context.Context, in *ManageDomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_ManageDomains_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GWServer is the server API for GW service.
 // All implementations must embed UnimplementedGWServer
 // for forward compatibility
@@ -75,6 +86,7 @@ type GWServer interface {
 	Login(context.Context, *LoginReq) (*LoginResp, error)
 	GetNewBridges(context.Context, *ListReq) (*NewBridgeList, error)
 	AckBridge(context.Context, *AcceptBridge) (*GeneralResp, error)
+	ManageDomains(context.Context, *ManageDomainReq) (*GeneralResp, error)
 	mustEmbedUnimplementedGWServer()
 }
 
@@ -90,6 +102,9 @@ func (UnimplementedGWServer) GetNewBridges(context.Context, *ListReq) (*NewBridg
 }
 func (UnimplementedGWServer) AckBridge(context.Context, *AcceptBridge) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AckBridge not implemented")
+}
+func (UnimplementedGWServer) ManageDomains(context.Context, *ManageDomainReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ManageDomains not implemented")
 }
 func (UnimplementedGWServer) mustEmbedUnimplementedGWServer() {}
 
@@ -158,6 +173,24 @@ func _GW_AckBridge_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GW_ManageDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ManageDomainReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).ManageDomains(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_ManageDomains_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).ManageDomains(ctx, req.(*ManageDomainReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GW_ServiceDesc is the grpc.ServiceDesc for GW service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +209,10 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AckBridge",
 			Handler:    _GW_AckBridge_Handler,
+		},
+		{
+			MethodName: "ManageDomains",
+			Handler:    _GW_ManageDomains_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
