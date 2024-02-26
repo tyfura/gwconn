@@ -8,7 +8,6 @@ package gwconn
 
 import (
 	context "context"
-	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -30,8 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GWClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
-	GetNewBridges(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*NewBridgeList, error)
-	AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc.CallOption) (*empty.Empty, error)
+	GetNewBridges(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*NewBridgeList, error)
+	AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
 type gWClient struct {
@@ -51,7 +50,7 @@ func (c *gWClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOpt
 	return out, nil
 }
 
-func (c *gWClient) GetNewBridges(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*NewBridgeList, error) {
+func (c *gWClient) GetNewBridges(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*NewBridgeList, error) {
 	out := new(NewBridgeList)
 	err := c.cc.Invoke(ctx, GW_GetNewBridges_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -60,8 +59,8 @@ func (c *gWClient) GetNewBridges(ctx context.Context, in *empty.Empty, opts ...g
 	return out, nil
 }
 
-func (c *gWClient) AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
+func (c *gWClient) AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_AckBridge_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -74,8 +73,8 @@ func (c *gWClient) AckBridge(ctx context.Context, in *AcceptBridge, opts ...grpc
 // for forward compatibility
 type GWServer interface {
 	Login(context.Context, *LoginReq) (*LoginResp, error)
-	GetNewBridges(context.Context, *empty.Empty) (*NewBridgeList, error)
-	AckBridge(context.Context, *AcceptBridge) (*empty.Empty, error)
+	GetNewBridges(context.Context, *ListReq) (*NewBridgeList, error)
+	AckBridge(context.Context, *AcceptBridge) (*GeneralResp, error)
 	mustEmbedUnimplementedGWServer()
 }
 
@@ -86,10 +85,10 @@ type UnimplementedGWServer struct {
 func (UnimplementedGWServer) Login(context.Context, *LoginReq) (*LoginResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedGWServer) GetNewBridges(context.Context, *empty.Empty) (*NewBridgeList, error) {
+func (UnimplementedGWServer) GetNewBridges(context.Context, *ListReq) (*NewBridgeList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNewBridges not implemented")
 }
-func (UnimplementedGWServer) AckBridge(context.Context, *AcceptBridge) (*empty.Empty, error) {
+func (UnimplementedGWServer) AckBridge(context.Context, *AcceptBridge) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AckBridge not implemented")
 }
 func (UnimplementedGWServer) mustEmbedUnimplementedGWServer() {}
@@ -124,7 +123,7 @@ func _GW_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{
 }
 
 func _GW_GetNewBridges_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(empty.Empty)
+	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -136,7 +135,7 @@ func _GW_GetNewBridges_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: GW_GetNewBridges_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).GetNewBridges(ctx, req.(*empty.Empty))
+		return srv.(GWServer).GetNewBridges(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

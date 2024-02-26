@@ -5,7 +5,7 @@ option java_multiple_files = true;
 option java_package = "io.tyft.gwconn";
 option java_outer_classname = "";
 
-import "google/protobuf/empty.proto";
+import "common.proto";
 package gwconn;
 
 // Interface exported by the server.
@@ -13,28 +13,14 @@ service Bridge {
   rpc LoginBridge(LoginReq) returns (LoginResp) {}
   rpc RegisterBridge(BridgeInfo) returns (RegisterResp) {} 
   rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
-  rpc CallDnsAcme(DnsAcmeReq) returns (google.protobuf.Empty) {}
-  rpc SendSystemStat(SystemStat) returns (google.protobuf.Empty) {}
-  rpc SendRouteInfo(RouteStat) returns (google.protobuf.Empty) {}
-  rpc SendLog(LogLineMsg) returns (google.protobuf.Empty) {}
+  rpc CallDnsAcme(DnsAcmeReq) returns (GeneralResp) {}
+  rpc SendSystemStat(SystemStat) returns (GeneralResp) {}
+  rpc SendRouteInfo(RouteStat) returns (GeneralResp) {}
+  rpc SendLog(LogLineMsg) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
 }
 
-message LoginReq {
-    string key = 1;
-    string id = 2;
-}
 
-message LoginResp {
-    string token = 1;
-}
-
-message BridgeInfo {
-    string bridgeId = 1;
-    string hostname = 2;
-    string os = 3;
-    string arch = 4;
-}
 
 message RegisterResp {
   string key = 2;

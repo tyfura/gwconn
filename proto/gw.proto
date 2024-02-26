@@ -5,15 +5,14 @@ option java_multiple_files = true;
 option java_package = "io.tyft.gwconn";
 option java_outer_classname = "";
 
-import "google/protobuf/empty.proto";
-import "bridge.proto";
+import "common.proto";
 package gwconn;
 
 // Interface exported by the server.
 service GW {
   rpc Login(LoginReq) returns (LoginResp) {}
-  rpc GetNewBridges(google.protobuf.Empty) returns (NewBridgeList) {} 
-  rpc AckBridge(AcceptBridge) returns (google.protobuf.Empty) {}
+  rpc GetNewBridges(ListReq) returns (NewBridgeList) {} 
+  rpc AckBridge(AcceptBridge) returns (GeneralResp) {}
 
 //  rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
 //  rpc CallDnsAcme(DnsAcmeReq) returns (google.protobuf.Empty) {}
