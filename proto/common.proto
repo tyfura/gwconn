@@ -9,7 +9,6 @@ package gwconn;
 
 message GeneralResp {
     bool ok = 1;
-    string err = 2; 
 }
 
 message ListReq {
