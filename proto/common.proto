@@ -7,8 +7,14 @@ option java_outer_classname = "";
 
 package gwconn;
 
+message JoinStreamReq {}
+
 message GeneralResp {
     bool ok = 1;
+}
+
+message StringList {
+    repeated string fqdn = 1;
 }
 
 message ListReq {
@@ -30,4 +36,28 @@ message BridgeInfo {
     string hostname = 2;
     string os = 3;
     string arch = 4;
+}
+
+message SystemStat {
+  repeated uint32 cpustat = 1;
+  uint64 maxRam = 2;
+  uint64 ramBuf = 3;
+  uint64 ramUsed = 4;
+  uint64 maxDisk = 5;
+  uint64 diskUsed = 6;
+  uint32 conns = 7;
+}
+
+message RouteStat {
+  string routeId = 1;
+  uint64 conns = 2;
+  uint64 trafOut = 3;
+  uint64 trafOutDelta = 4;
+  uint64 trafIn = 5;
+  uint64 trafInDelta = 6;
+}
+
+message LogLineMsg {
+  string taskId = 1;
+  string line = 2;
 }

@@ -11,21 +11,37 @@ package gwconn;
 // Interface exported by the server.
 service GW {
   rpc Login(LoginReq) returns (LoginResp) {}
-  rpc GetNewBridges(ListReq) returns (NewBridgeList) {} 
-  rpc AckBridge(AcceptBridge) returns (GeneralResp) {}
-  rpc ManageDomains(ManageDomainReq) returns (GeneralResp) {}
+
+  // bridges
+  rpc GetNewBridges(ListReq) returns (BridgeList) {} 
+  rpc SetBridgeState(SetBridgeStateReq) returns (GeneralResp) {}
+  rpc GetBridges(ListReq) returns (BridgeList) {}
+  rpc AddBridgeTarget(AddBridgeTargetReq) returns (GeneralResp) {}
+  rpc GetBridgeLogs(ListReq) returns (StringList) {}
+  rpc GetBridgeRouteInfo(ListReq) returns (StringList) {}
+  rpc GetBridgeSystemStat(ListReq) returns (StringList) {}
+  rpc TailBridgeLogs(JoinStreamReq) returns (stream LogLineMsg) {}
+
+  // domains
+  rpc AddDomain(AddDomainReq) returns (GeneralResp) {}
+  rpc ListDomains(ListReq) returns (StringList) {}
 }
 
-
-message NewBridgeList {
+message BridgeList {
     repeated BridgeInfo bridges = 1;
 }
 
-message AcceptBridge {
+message SetBridgeStateReq {
   string id = 1;
+  uint32 state = 2;
 }
 
-message ManageDomainReq {
-  bool isAdd = 1;
-  string fqdn = 2;
+message AddDomainReq {
+  string fqdn = 1;
+}
+
+message AddBridgeTargetReq {
+  string domain = 1;
+  string proto = 2;
+  string addr = 3;
 }
