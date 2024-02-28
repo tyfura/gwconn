@@ -23,8 +23,7 @@ const (
 	Bridge_RegisterBridge_FullMethodName  = "/gwconn.Bridge/RegisterBridge"
 	Bridge_GetTargetStream_FullMethodName = "/gwconn.Bridge/GetTargetStream"
 	Bridge_DnsAcmeChanger_FullMethodName  = "/gwconn.Bridge/DnsAcmeChanger"
-	Bridge_SendSystemStat_FullMethodName  = "/gwconn.Bridge/SendSystemStat"
-	Bridge_SendRouteInfo_FullMethodName   = "/gwconn.Bridge/SendRouteInfo"
+	Bridge_SendStat_FullMethodName        = "/gwconn.Bridge/SendStat"
 	Bridge_SendLog_FullMethodName         = "/gwconn.Bridge/SendLog"
 )
 
@@ -36,8 +35,7 @@ type BridgeClient interface {
 	RegisterBridge(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
 	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_GetTargetStreamClient, error)
 	DnsAcmeChanger(ctx context.Context, in *DnsChangerReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*GeneralResp, error)
-	SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*GeneralResp, error)
+	SendStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	SendLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
@@ -83,7 +81,7 @@ func (c *bridgeClient) GetTargetStream(ctx context.Context, in *JoinStreamReq, o
 }
 
 type Bridge_GetTargetStreamClient interface {
-	Recv() (*BridgeTarget, error)
+	Recv() (*Targets, error)
 	grpc.ClientStream
 }
 
@@ -91,8 +89,8 @@ type bridgeGetTargetStreamClient struct {
 	grpc.ClientStream
 }
 
-func (x *bridgeGetTargetStreamClient) Recv() (*BridgeTarget, error) {
-	m := new(BridgeTarget)
+func (x *bridgeGetTargetStreamClient) Recv() (*Targets, error) {
+	m := new(Targets)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -108,18 +106,9 @@ func (c *bridgeClient) DnsAcmeChanger(ctx context.Context, in *DnsChangerReq, op
 	return out, nil
 }
 
-func (c *bridgeClient) SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *bridgeClient) SendStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, Bridge_SendSystemStat_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *bridgeClient) SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, Bridge_SendRouteInfo_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bridge_SendStat_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -143,8 +132,7 @@ type BridgeServer interface {
 	RegisterBridge(context.Context, *BridgeInfo) (*RegisterResp, error)
 	GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error
 	DnsAcmeChanger(context.Context, *DnsChangerReq) (*GeneralResp, error)
-	SendSystemStat(context.Context, *SystemStat) (*GeneralResp, error)
-	SendRouteInfo(context.Context, *RouteStat) (*GeneralResp, error)
+	SendStat(context.Context, *BridgeStat) (*GeneralResp, error)
 	SendLog(context.Context, *LogMsg) (*GeneralResp, error)
 	mustEmbedUnimplementedBridgeServer()
 }
@@ -165,11 +153,8 @@ func (UnimplementedBridgeServer) GetTargetStream(*JoinStreamReq, Bridge_GetTarge
 func (UnimplementedBridgeServer) DnsAcmeChanger(context.Context, *DnsChangerReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DnsAcmeChanger not implemented")
 }
-func (UnimplementedBridgeServer) SendSystemStat(context.Context, *SystemStat) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendSystemStat not implemented")
-}
-func (UnimplementedBridgeServer) SendRouteInfo(context.Context, *RouteStat) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendRouteInfo not implemented")
+func (UnimplementedBridgeServer) SendStat(context.Context, *BridgeStat) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendStat not implemented")
 }
 func (UnimplementedBridgeServer) SendLog(context.Context, *LogMsg) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendLog not implemented")
@@ -232,7 +217,7 @@ func _Bridge_GetTargetStream_Handler(srv interface{}, stream grpc.ServerStream) 
 }
 
 type Bridge_GetTargetStreamServer interface {
-	Send(*BridgeTarget) error
+	Send(*Targets) error
 	grpc.ServerStream
 }
 
@@ -240,7 +225,7 @@ type bridgeGetTargetStreamServer struct {
 	grpc.ServerStream
 }
 
-func (x *bridgeGetTargetStreamServer) Send(m *BridgeTarget) error {
+func (x *bridgeGetTargetStreamServer) Send(m *Targets) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -262,38 +247,20 @@ func _Bridge_DnsAcmeChanger_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bridge_SendSystemStat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SystemStat)
+func _Bridge_SendStat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BridgeStat)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeServer).SendSystemStat(ctx, in)
+		return srv.(BridgeServer).SendStat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bridge_SendSystemStat_FullMethodName,
+		FullMethod: Bridge_SendStat_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeServer).SendSystemStat(ctx, req.(*SystemStat))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Bridge_SendRouteInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RouteStat)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BridgeServer).SendRouteInfo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Bridge_SendRouteInfo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeServer).SendRouteInfo(ctx, req.(*RouteStat))
+		return srv.(BridgeServer).SendStat(ctx, req.(*BridgeStat))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -336,12 +303,8 @@ var Bridge_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bridge_DnsAcmeChanger_Handler,
 		},
 		{
-			MethodName: "SendSystemStat",
-			Handler:    _Bridge_SendSystemStat_Handler,
-		},
-		{
-			MethodName: "SendRouteInfo",
-			Handler:    _Bridge_SendRouteInfo_Handler,
+			MethodName: "SendStat",
+			Handler:    _Bridge_SendStat_Handler,
 		},
 		{
 			MethodName: "SendLog",

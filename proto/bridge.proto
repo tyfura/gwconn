@@ -12,10 +12,9 @@ package gwconn;
 service Bridge {
   rpc LoginBridge(LoginReq) returns (LoginResp) {}
   rpc RegisterBridge(BridgeInfo) returns (RegisterResp) {} 
-  rpc GetTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
+  rpc GetTargetStream(JoinStreamReq) returns (stream Targets) {}
   rpc DnsAcmeChanger(DnsChangerReq) returns (GeneralResp) {}
-  rpc SendSystemStat(SystemStat) returns (GeneralResp) {}
-  rpc SendRouteInfo(RouteStat) returns (GeneralResp) {}
+  rpc SendStat(BridgeStat) returns (GeneralResp) {}
   rpc SendLog(LogMsg) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
 }
@@ -24,14 +23,13 @@ message RegisterResp {
   string key = 2;
 }
 
-message BridgeTarget {
+message Targets {
   uint32 act = 1;
   string targeId = 2;
   string fqdn = 3;
   string addr = 4;
   uint32 typ = 5;
 }
-
 
 message DnsChangerReq {
   bool isSet = 1;

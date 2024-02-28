@@ -38,14 +38,17 @@ message BridgeInfo {
     string arch = 4;
 }
 
-message SystemStat {
-  repeated uint32 cpustat = 1;
-  uint64 maxRam = 2;
-  uint64 ramBuf = 3;
-  uint64 ramUsed = 4;
-  uint64 maxDisk = 5;
-  uint64 diskUsed = 6;
-  uint32 conns = 7;
+message BridgeStat {
+  uint32 cpuTotalUsage = 1;
+  uint32 cpuBridgeUsage = 2;
+  uint64 ramTotal = 3;
+  uint32 ramTotalUsage = 4;
+  uint32 ramBridgeUsage = 5;
+  uint64 diskTotal = 6;
+  uint32 diskUsage = 7;
+  uint32 connsGw = 8;
+  uint32 connsBridge = 9;
+  uint64 uptime = 10;
 }
 
 message RouteStat {
