@@ -38,7 +38,7 @@ type BridgeClient interface {
 	DnsAcmeChanger(ctx context.Context, in *DnsChangerReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	SendSystemStat(ctx context.Context, in *SystemStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	SendRouteInfo(ctx context.Context, in *RouteStat, opts ...grpc.CallOption) (*GeneralResp, error)
-	SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*GeneralResp, error)
+	SendLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
 type bridgeClient struct {
@@ -126,7 +126,7 @@ func (c *bridgeClient) SendRouteInfo(ctx context.Context, in *RouteStat, opts ..
 	return out, nil
 }
 
-func (c *bridgeClient) SendLog(ctx context.Context, in *LogLineMsg, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *bridgeClient) SendLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, Bridge_SendLog_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -145,7 +145,7 @@ type BridgeServer interface {
 	DnsAcmeChanger(context.Context, *DnsChangerReq) (*GeneralResp, error)
 	SendSystemStat(context.Context, *SystemStat) (*GeneralResp, error)
 	SendRouteInfo(context.Context, *RouteStat) (*GeneralResp, error)
-	SendLog(context.Context, *LogLineMsg) (*GeneralResp, error)
+	SendLog(context.Context, *LogMsg) (*GeneralResp, error)
 	mustEmbedUnimplementedBridgeServer()
 }
 
@@ -171,7 +171,7 @@ func (UnimplementedBridgeServer) SendSystemStat(context.Context, *SystemStat) (*
 func (UnimplementedBridgeServer) SendRouteInfo(context.Context, *RouteStat) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendRouteInfo not implemented")
 }
-func (UnimplementedBridgeServer) SendLog(context.Context, *LogLineMsg) (*GeneralResp, error) {
+func (UnimplementedBridgeServer) SendLog(context.Context, *LogMsg) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendLog not implemented")
 }
 func (UnimplementedBridgeServer) mustEmbedUnimplementedBridgeServer() {}
@@ -299,7 +299,7 @@ func _Bridge_SendRouteInfo_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _Bridge_SendLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogLineMsg)
+	in := new(LogMsg)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -311,7 +311,7 @@ func _Bridge_SendLog_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: Bridge_SendLog_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeServer).SendLog(ctx, req.(*LogLineMsg))
+		return srv.(BridgeServer).SendLog(ctx, req.(*LogMsg))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -57,7 +57,8 @@ message RouteStat {
   uint64 trafInDelta = 6;
 }
 
-message LogLineMsg {
-  string taskId = 1;
-  string line = 2;
+message LogMsg {
+  uint64 time = 1;
+  string task = 2;
+  string mgs = 3;
 }

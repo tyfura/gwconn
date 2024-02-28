@@ -147,7 +147,7 @@ func (c *gWClient) TailBridgeLogs(ctx context.Context, in *JoinStreamReq, opts .
 }
 
 type GW_TailBridgeLogsClient interface {
-	Recv() (*LogLineMsg, error)
+	Recv() (*LogMsg, error)
 	grpc.ClientStream
 }
 
@@ -155,8 +155,8 @@ type gWTailBridgeLogsClient struct {
 	grpc.ClientStream
 }
 
-func (x *gWTailBridgeLogsClient) Recv() (*LogLineMsg, error) {
-	m := new(LogLineMsg)
+func (x *gWTailBridgeLogsClient) Recv() (*LogMsg, error) {
+	m := new(LogMsg)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -404,7 +404,7 @@ func _GW_TailBridgeLogs_Handler(srv interface{}, stream grpc.ServerStream) error
 }
 
 type GW_TailBridgeLogsServer interface {
-	Send(*LogLineMsg) error
+	Send(*LogMsg) error
 	grpc.ServerStream
 }
 
@@ -412,7 +412,7 @@ type gWTailBridgeLogsServer struct {
 	grpc.ServerStream
 }
 
-func (x *gWTailBridgeLogsServer) Send(m *LogLineMsg) error {
+func (x *gWTailBridgeLogsServer) Send(m *LogMsg) error {
 	return x.ServerStream.SendMsg(m)
 }
 

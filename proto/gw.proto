@@ -20,7 +20,7 @@ service GW {
   rpc GetBridgeLogs(ListReq) returns (StringList) {}
   rpc GetBridgeRouteInfo(ListReq) returns (StringList) {}
   rpc GetBridgeSystemStat(ListReq) returns (StringList) {}
-  rpc TailBridgeLogs(JoinStreamReq) returns (stream LogLineMsg) {}
+  rpc TailBridgeLogs(JoinStreamReq) returns (stream LogMsg) {}
 
   // domains
   rpc AddDomain(AddDomainReq) returns (GeneralResp) {}

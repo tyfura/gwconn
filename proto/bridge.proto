@@ -16,7 +16,7 @@ service Bridge {
   rpc DnsAcmeChanger(DnsChangerReq) returns (GeneralResp) {}
   rpc SendSystemStat(SystemStat) returns (GeneralResp) {}
   rpc SendRouteInfo(RouteStat) returns (GeneralResp) {}
-  rpc SendLog(LogLineMsg) returns (GeneralResp) {}
+  rpc SendLog(LogMsg) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
 }
 
