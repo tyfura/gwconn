@@ -65,3 +65,18 @@ message LogMsg {
   string task = 2;
   string mgs = 3;
 }
+
+message VpnReq {
+  string pubkey = 1;
+}
+
+message VpnInfo {
+  string addr = 1;
+  uint32 mtu = 2;
+  string preshared = 3;
+  string dns = 4;
+  string pubkey = 5;
+  string allowedIps = 6;
+  string endpoint = 7;
+  uint32 persKeepalive = 8;
+}

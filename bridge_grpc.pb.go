@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Bridge_LoginBridge_FullMethodName     = "/gwconn.Bridge/LoginBridge"
 	Bridge_RegisterBridge_FullMethodName  = "/gwconn.Bridge/RegisterBridge"
+	Bridge_GetVpn_FullMethodName          = "/gwconn.Bridge/GetVpn"
 	Bridge_GetTargetStream_FullMethodName = "/gwconn.Bridge/GetTargetStream"
 	Bridge_DnsAcmeChanger_FullMethodName  = "/gwconn.Bridge/DnsAcmeChanger"
 	Bridge_SendStat_FullMethodName        = "/gwconn.Bridge/SendStat"
@@ -33,6 +34,7 @@ const (
 type BridgeClient interface {
 	LoginBridge(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	RegisterBridge(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
+	GetVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnInfo, error)
 	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_GetTargetStreamClient, error)
 	DnsAcmeChanger(ctx context.Context, in *DnsChangerReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	SendStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -59,6 +61,15 @@ func (c *bridgeClient) LoginBridge(ctx context.Context, in *LoginReq, opts ...gr
 func (c *bridgeClient) RegisterBridge(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error) {
 	out := new(RegisterResp)
 	err := c.cc.Invoke(ctx, Bridge_RegisterBridge_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bridgeClient) GetVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnInfo, error) {
+	out := new(VpnInfo)
+	err := c.cc.Invoke(ctx, Bridge_GetVpn_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -130,6 +141,7 @@ func (c *bridgeClient) SendLog(ctx context.Context, in *LogMsg, opts ...grpc.Cal
 type BridgeServer interface {
 	LoginBridge(context.Context, *LoginReq) (*LoginResp, error)
 	RegisterBridge(context.Context, *BridgeInfo) (*RegisterResp, error)
+	GetVpn(context.Context, *VpnReq) (*VpnInfo, error)
 	GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error
 	DnsAcmeChanger(context.Context, *DnsChangerReq) (*GeneralResp, error)
 	SendStat(context.Context, *BridgeStat) (*GeneralResp, error)
@@ -146,6 +158,9 @@ func (UnimplementedBridgeServer) LoginBridge(context.Context, *LoginReq) (*Login
 }
 func (UnimplementedBridgeServer) RegisterBridge(context.Context, *BridgeInfo) (*RegisterResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterBridge not implemented")
+}
+func (UnimplementedBridgeServer) GetVpn(context.Context, *VpnReq) (*VpnInfo, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVpn not implemented")
 }
 func (UnimplementedBridgeServer) GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetTargetStream not implemented")
@@ -204,6 +219,24 @@ func _Bridge_RegisterBridge_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BridgeServer).RegisterBridge(ctx, req.(*BridgeInfo))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Bridge_GetVpn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VpnReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BridgeServer).GetVpn(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bridge_GetVpn_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BridgeServer).GetVpn(ctx, req.(*VpnReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -297,6 +330,10 @@ var Bridge_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RegisterBridge",
 			Handler:    _Bridge_RegisterBridge_Handler,
+		},
+		{
+			MethodName: "GetVpn",
+			Handler:    _Bridge_GetVpn_Handler,
 		},
 		{
 			MethodName: "DnsAcmeChanger",
