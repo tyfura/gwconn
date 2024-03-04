@@ -30,6 +30,7 @@ const (
 	GW_TailBridgeLogs_FullMethodName      = "/gwconn.GW/TailBridgeLogs"
 	GW_AddDomain_FullMethodName           = "/gwconn.GW/AddDomain"
 	GW_ListDomains_FullMethodName         = "/gwconn.GW/ListDomains"
+	GW_VerifyDomain_FullMethodName        = "/gwconn.GW/VerifyDomain"
 )
 
 // GWClient is the client API for GW service.
@@ -47,8 +48,9 @@ type GWClient interface {
 	GetBridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
 	TailBridgeLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_TailBridgeLogsClient, error)
 	// domains
-	AddDomain(ctx context.Context, in *AddDomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	AddDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error)
+	VerifyDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
 type gWClient struct {
@@ -163,7 +165,7 @@ func (x *gWTailBridgeLogsClient) Recv() (*LogMsg, error) {
 	return m, nil
 }
 
-func (c *gWClient) AddDomain(ctx context.Context, in *AddDomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) AddDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_AddDomain_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -175,6 +177,15 @@ func (c *gWClient) AddDomain(ctx context.Context, in *AddDomainReq, opts ...grpc
 func (c *gWClient) ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error) {
 	out := new(ManagedDomains)
 	err := c.cc.Invoke(ctx, GW_ListDomains_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) VerifyDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_VerifyDomain_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -196,8 +207,9 @@ type GWServer interface {
 	GetBridgeSystemStat(context.Context, *ListReq) (*StringList, error)
 	TailBridgeLogs(*JoinStreamReq, GW_TailBridgeLogsServer) error
 	// domains
-	AddDomain(context.Context, *AddDomainReq) (*GeneralResp, error)
+	AddDomain(context.Context, *DomainReq) (*GeneralResp, error)
 	ListDomains(context.Context, *ListReq) (*ManagedDomains, error)
+	VerifyDomain(context.Context, *DomainReq) (*GeneralResp, error)
 	mustEmbedUnimplementedGWServer()
 }
 
@@ -232,11 +244,14 @@ func (UnimplementedGWServer) GetBridgeSystemStat(context.Context, *ListReq) (*St
 func (UnimplementedGWServer) TailBridgeLogs(*JoinStreamReq, GW_TailBridgeLogsServer) error {
 	return status.Errorf(codes.Unimplemented, "method TailBridgeLogs not implemented")
 }
-func (UnimplementedGWServer) AddDomain(context.Context, *AddDomainReq) (*GeneralResp, error) {
+func (UnimplementedGWServer) AddDomain(context.Context, *DomainReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDomain not implemented")
 }
 func (UnimplementedGWServer) ListDomains(context.Context, *ListReq) (*ManagedDomains, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomains not implemented")
+}
+func (UnimplementedGWServer) VerifyDomain(context.Context, *DomainReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyDomain not implemented")
 }
 func (UnimplementedGWServer) mustEmbedUnimplementedGWServer() {}
 
@@ -417,7 +432,7 @@ func (x *gWTailBridgeLogsServer) Send(m *LogMsg) error {
 }
 
 func _GW_AddDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddDomainReq)
+	in := new(DomainReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -429,7 +444,7 @@ func _GW_AddDomain_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: GW_AddDomain_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).AddDomain(ctx, req.(*AddDomainReq))
+		return srv.(GWServer).AddDomain(ctx, req.(*DomainReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -448,6 +463,24 @@ func _GW_ListDomains_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(GWServer).ListDomains(ctx, req.(*ListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_VerifyDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DomainReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).VerifyDomain(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_VerifyDomain_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).VerifyDomain(ctx, req.(*DomainReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -498,6 +531,10 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDomains",
 			Handler:    _GW_ListDomains_Handler,
+		},
+		{
+			MethodName: "VerifyDomain",
+			Handler:    _GW_VerifyDomain_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -23,8 +23,9 @@ service GW {
   rpc TailBridgeLogs(JoinStreamReq) returns (stream LogMsg) {}
 
   // domains
-  rpc AddDomain(AddDomainReq) returns (GeneralResp) {}
+  rpc AddDomain(DomainReq) returns (GeneralResp) {}
   rpc ListDomains(ListReq) returns (ManagedDomains) {}
+  rpc VerifyDomain(DomainReq) returns (GeneralResp) {}
 }
 
 message BridgeList {
@@ -36,7 +37,7 @@ message SetBridgeStateReq {
   uint32 state = 2;
 }
 
-message AddDomainReq {
+message DomainReq {
   string fqdn = 1;
 }
 
