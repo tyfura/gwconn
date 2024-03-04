@@ -24,7 +24,7 @@ service GW {
 
   // domains
   rpc AddDomain(AddDomainReq) returns (GeneralResp) {}
-  rpc ListDomains(ListReq) returns (StringList) {}
+  rpc ListDomains(ListReq) returns (ManagedDomains) {}
 }
 
 message BridgeList {
@@ -44,4 +44,13 @@ message AddBridgeTargetReq {
   string domain = 1;
   string proto = 2;
   string addr = 3;
+}
+
+message ManagedDomain {
+  string fqdn = 1;
+  uint32 state = 2;
+}
+
+message ManagedDomains {
+  repeated ManagedDomain list = 1;
 }

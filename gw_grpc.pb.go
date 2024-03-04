@@ -48,7 +48,7 @@ type GWClient interface {
 	TailBridgeLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_TailBridgeLogsClient, error)
 	// domains
 	AddDomain(ctx context.Context, in *AddDomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
+	ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error)
 }
 
 type gWClient struct {
@@ -172,8 +172,8 @@ func (c *gWClient) AddDomain(ctx context.Context, in *AddDomainReq, opts ...grpc
 	return out, nil
 }
 
-func (c *gWClient) ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error) {
-	out := new(StringList)
+func (c *gWClient) ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error) {
+	out := new(ManagedDomains)
 	err := c.cc.Invoke(ctx, GW_ListDomains_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -197,7 +197,7 @@ type GWServer interface {
 	TailBridgeLogs(*JoinStreamReq, GW_TailBridgeLogsServer) error
 	// domains
 	AddDomain(context.Context, *AddDomainReq) (*GeneralResp, error)
-	ListDomains(context.Context, *ListReq) (*StringList, error)
+	ListDomains(context.Context, *ListReq) (*ManagedDomains, error)
 	mustEmbedUnimplementedGWServer()
 }
 
@@ -235,7 +235,7 @@ func (UnimplementedGWServer) TailBridgeLogs(*JoinStreamReq, GW_TailBridgeLogsSer
 func (UnimplementedGWServer) AddDomain(context.Context, *AddDomainReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDomain not implemented")
 }
-func (UnimplementedGWServer) ListDomains(context.Context, *ListReq) (*StringList, error) {
+func (UnimplementedGWServer) ListDomains(context.Context, *ListReq) (*ManagedDomains, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDomains not implemented")
 }
 func (UnimplementedGWServer) mustEmbedUnimplementedGWServer() {}
