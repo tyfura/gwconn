@@ -66,9 +66,7 @@ message LogMsg {
   string mgs = 3;
 }
 
-message VpnReq {
-  string pubkey = 1;
-}
+message VpnReq {}
 
 message VpnInfo {
   string addr = 1;
