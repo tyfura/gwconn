@@ -14,7 +14,7 @@ message GeneralResp {
 }
 
 message StringList {
-    repeated string fqdn = 1;
+    repeated string arr = 1;
 }
 
 message ListReq {
@@ -23,8 +23,8 @@ message ListReq {
 }
 
 message LoginReq {
-    string key = 1;
-    string id = 2;
+    string id = 1;
+    string key = 2;
 }
 
 message LoginResp {
@@ -68,13 +68,14 @@ message LogMsg {
 
 message VpnReq {}
 
-message VpnInfo {
+message VpnCfg {
   string addr = 1;
   uint32 mtu = 2;
   string preshared = 3;
   string dns = 4;
-  string pubkey = 5;
-  string allowedIps = 6;
-  string endpoint = 7;
-  uint32 persKeepalive = 8;
+  string clkey = 5;
+  string srvpub = 6;
+  string allowedIps = 7;
+  string endpoint = 8;
+  uint32 persKeepalive = 9;
 }

@@ -34,7 +34,7 @@ const (
 type BridgeClient interface {
 	LoginBridge(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	RegisterBridge(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
-	GetVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnInfo, error)
+	GetVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnCfg, error)
 	GetTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_GetTargetStreamClient, error)
 	DnsAcmeChanger(ctx context.Context, in *DnsChangerReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	SendStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -67,8 +67,8 @@ func (c *bridgeClient) RegisterBridge(ctx context.Context, in *BridgeInfo, opts 
 	return out, nil
 }
 
-func (c *bridgeClient) GetVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnInfo, error) {
-	out := new(VpnInfo)
+func (c *bridgeClient) GetVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnCfg, error) {
+	out := new(VpnCfg)
 	err := c.cc.Invoke(ctx, Bridge_GetVpn_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -141,7 +141,7 @@ func (c *bridgeClient) SendLog(ctx context.Context, in *LogMsg, opts ...grpc.Cal
 type BridgeServer interface {
 	LoginBridge(context.Context, *LoginReq) (*LoginResp, error)
 	RegisterBridge(context.Context, *BridgeInfo) (*RegisterResp, error)
-	GetVpn(context.Context, *VpnReq) (*VpnInfo, error)
+	GetVpn(context.Context, *VpnReq) (*VpnCfg, error)
 	GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error
 	DnsAcmeChanger(context.Context, *DnsChangerReq) (*GeneralResp, error)
 	SendStat(context.Context, *BridgeStat) (*GeneralResp, error)
@@ -159,7 +159,7 @@ func (UnimplementedBridgeServer) LoginBridge(context.Context, *LoginReq) (*Login
 func (UnimplementedBridgeServer) RegisterBridge(context.Context, *BridgeInfo) (*RegisterResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterBridge not implemented")
 }
-func (UnimplementedBridgeServer) GetVpn(context.Context, *VpnReq) (*VpnInfo, error) {
+func (UnimplementedBridgeServer) GetVpn(context.Context, *VpnReq) (*VpnCfg, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVpn not implemented")
 }
 func (UnimplementedBridgeServer) GetTargetStream(*JoinStreamReq, Bridge_GetTargetStreamServer) error {

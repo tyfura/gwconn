@@ -12,7 +12,7 @@ package gwconn;
 service Bridge {
   rpc LoginBridge(LoginReq) returns (LoginResp) {}
   rpc RegisterBridge(BridgeInfo) returns (RegisterResp) {} 
-  rpc GetVpn(VpnReq) returns (VpnInfo) {}
+  rpc GetVpn(VpnReq) returns (VpnCfg) {}
   rpc GetTargetStream(JoinStreamReq) returns (stream Targets) {}
   rpc DnsAcmeChanger(DnsChangerReq) returns (GeneralResp) {}
   rpc SendStat(BridgeStat) returns (GeneralResp) {}
