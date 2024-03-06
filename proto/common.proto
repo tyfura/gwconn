@@ -77,5 +77,4 @@ message VpnCfg {
   string srvpub = 6;
   string allowedIps = 7;
   string endpoint = 8;
-  uint32 persKeepalive = 9;
 }
