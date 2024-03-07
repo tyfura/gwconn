@@ -13,19 +13,19 @@ service GW {
   rpc Login(LoginReq) returns (LoginResp) {}
 
   // bridges
-  rpc GetNewBridges(ListReq) returns (BridgeList) {} 
-  rpc SetBridgeState(SetBridgeStateReq) returns (GeneralResp) {}
-  rpc GetBridges(ListReq) returns (BridgeList) {}
-  rpc AddBridgeTarget(AddBridgeTargetReq) returns (GeneralResp) {}
-  rpc GetBridgeLogs(ListReq) returns (StringList) {}
-  rpc GetBridgeRouteInfo(ListReq) returns (StringList) {}
-  rpc GetBridgeSystemStat(ListReq) returns (StringList) {}
-  rpc TailBridgeLogs(JoinStreamReq) returns (stream LogMsg) {}
+  rpc BridgeListNew(ListReq) returns (BridgeList) {} 
+  rpc BridgeSetState(SetBridgeStateReq) returns (GeneralResp) {}
+  rpc BridgesList(ListReq) returns (BridgeList) {}
+  rpc BridgeAddTarget(AddBridgeTargetReq) returns (GeneralResp) {}
+  rpc BridgeLogs(ListReq) returns (StringList) {}
+  rpc BridgeRouteInfo(ListReq) returns (StringList) {}
+  rpc BridgeSystemStat(ListReq) returns (StringList) {}
+  rpc BridgeStreamLogs(JoinStreamReq) returns (stream LogMsg) {}
 
   // domains
-  rpc AddDomain(DomainReq) returns (GeneralResp) {}
-  rpc ListDomains(ListReq) returns (ManagedDomains) {}
-  rpc VerifyDomain(DomainReq) returns (GeneralResp) {}
+  rpc DomainAdd(DomainReq) returns (GeneralResp) {}
+  rpc DomainList(ListReq) returns (ManagedDomains) {}
+  rpc DomainVerify(DomainReq) returns (GeneralResp) {}
 }
 
 message BridgeList {

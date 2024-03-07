@@ -19,18 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	GW_Login_FullMethodName               = "/gwconn.GW/Login"
-	GW_GetNewBridges_FullMethodName       = "/gwconn.GW/GetNewBridges"
-	GW_SetBridgeState_FullMethodName      = "/gwconn.GW/SetBridgeState"
-	GW_GetBridges_FullMethodName          = "/gwconn.GW/GetBridges"
-	GW_AddBridgeTarget_FullMethodName     = "/gwconn.GW/AddBridgeTarget"
-	GW_GetBridgeLogs_FullMethodName       = "/gwconn.GW/GetBridgeLogs"
-	GW_GetBridgeRouteInfo_FullMethodName  = "/gwconn.GW/GetBridgeRouteInfo"
-	GW_GetBridgeSystemStat_FullMethodName = "/gwconn.GW/GetBridgeSystemStat"
-	GW_TailBridgeLogs_FullMethodName      = "/gwconn.GW/TailBridgeLogs"
-	GW_AddDomain_FullMethodName           = "/gwconn.GW/AddDomain"
-	GW_ListDomains_FullMethodName         = "/gwconn.GW/ListDomains"
-	GW_VerifyDomain_FullMethodName        = "/gwconn.GW/VerifyDomain"
+	GW_Login_FullMethodName            = "/gwconn.GW/Login"
+	GW_BridgeListNew_FullMethodName    = "/gwconn.GW/BridgeListNew"
+	GW_BridgeSetState_FullMethodName   = "/gwconn.GW/BridgeSetState"
+	GW_BridgesList_FullMethodName      = "/gwconn.GW/BridgesList"
+	GW_BridgeAddTarget_FullMethodName  = "/gwconn.GW/BridgeAddTarget"
+	GW_BridgeLogs_FullMethodName       = "/gwconn.GW/BridgeLogs"
+	GW_BridgeRouteInfo_FullMethodName  = "/gwconn.GW/BridgeRouteInfo"
+	GW_BridgeSystemStat_FullMethodName = "/gwconn.GW/BridgeSystemStat"
+	GW_BridgeStreamLogs_FullMethodName = "/gwconn.GW/BridgeStreamLogs"
+	GW_DomainAdd_FullMethodName        = "/gwconn.GW/DomainAdd"
+	GW_DomainList_FullMethodName       = "/gwconn.GW/DomainList"
+	GW_DomainVerify_FullMethodName     = "/gwconn.GW/DomainVerify"
 )
 
 // GWClient is the client API for GW service.
@@ -39,18 +39,18 @@ const (
 type GWClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	// bridges
-	GetNewBridges(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error)
-	SetBridgeState(ctx context.Context, in *SetBridgeStateReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	GetBridges(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error)
-	AddBridgeTarget(ctx context.Context, in *AddBridgeTargetReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	GetBridgeLogs(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
-	GetBridgeRouteInfo(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
-	GetBridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
-	TailBridgeLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_TailBridgeLogsClient, error)
+	BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error)
+	BridgeSetState(ctx context.Context, in *SetBridgeStateReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	BridgesList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error)
+	BridgeAddTarget(ctx context.Context, in *AddBridgeTargetReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	BridgeLogs(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
+	BridgeRouteInfo(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
+	BridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
+	BridgeStreamLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_BridgeStreamLogsClient, error)
 	// domains
-	AddDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error)
-	VerifyDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	DomainAdd(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	DomainList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error)
+	DomainVerify(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
 type gWClient struct {
@@ -70,75 +70,75 @@ func (c *gWClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOpt
 	return out, nil
 }
 
-func (c *gWClient) GetNewBridges(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error) {
+func (c *gWClient) BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error) {
 	out := new(BridgeList)
-	err := c.cc.Invoke(ctx, GW_GetNewBridges_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgeListNew_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) SetBridgeState(ctx context.Context, in *SetBridgeStateReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) BridgeSetState(ctx context.Context, in *SetBridgeStateReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_SetBridgeState_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgeSetState_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) GetBridges(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error) {
+func (c *gWClient) BridgesList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error) {
 	out := new(BridgeList)
-	err := c.cc.Invoke(ctx, GW_GetBridges_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgesList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) AddBridgeTarget(ctx context.Context, in *AddBridgeTargetReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) BridgeAddTarget(ctx context.Context, in *AddBridgeTargetReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_AddBridgeTarget_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgeAddTarget_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) GetBridgeLogs(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error) {
+func (c *gWClient) BridgeLogs(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error) {
 	out := new(StringList)
-	err := c.cc.Invoke(ctx, GW_GetBridgeLogs_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgeLogs_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) GetBridgeRouteInfo(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error) {
+func (c *gWClient) BridgeRouteInfo(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error) {
 	out := new(StringList)
-	err := c.cc.Invoke(ctx, GW_GetBridgeRouteInfo_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgeRouteInfo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) GetBridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error) {
+func (c *gWClient) BridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error) {
 	out := new(StringList)
-	err := c.cc.Invoke(ctx, GW_GetBridgeSystemStat_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgeSystemStat_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) TailBridgeLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_TailBridgeLogsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &GW_ServiceDesc.Streams[0], GW_TailBridgeLogs_FullMethodName, opts...)
+func (c *gWClient) BridgeStreamLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_BridgeStreamLogsClient, error) {
+	stream, err := c.cc.NewStream(ctx, &GW_ServiceDesc.Streams[0], GW_BridgeStreamLogs_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &gWTailBridgeLogsClient{stream}
+	x := &gWBridgeStreamLogsClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -148,16 +148,16 @@ func (c *gWClient) TailBridgeLogs(ctx context.Context, in *JoinStreamReq, opts .
 	return x, nil
 }
 
-type GW_TailBridgeLogsClient interface {
+type GW_BridgeStreamLogsClient interface {
 	Recv() (*LogMsg, error)
 	grpc.ClientStream
 }
 
-type gWTailBridgeLogsClient struct {
+type gWBridgeStreamLogsClient struct {
 	grpc.ClientStream
 }
 
-func (x *gWTailBridgeLogsClient) Recv() (*LogMsg, error) {
+func (x *gWBridgeStreamLogsClient) Recv() (*LogMsg, error) {
 	m := new(LogMsg)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -165,27 +165,27 @@ func (x *gWTailBridgeLogsClient) Recv() (*LogMsg, error) {
 	return m, nil
 }
 
-func (c *gWClient) AddDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) DomainAdd(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_AddDomain_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_DomainAdd_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) ListDomains(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error) {
+func (c *gWClient) DomainList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error) {
 	out := new(ManagedDomains)
-	err := c.cc.Invoke(ctx, GW_ListDomains_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_DomainList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) VerifyDomain(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) DomainVerify(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_VerifyDomain_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_DomainVerify_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -198,18 +198,18 @@ func (c *gWClient) VerifyDomain(ctx context.Context, in *DomainReq, opts ...grpc
 type GWServer interface {
 	Login(context.Context, *LoginReq) (*LoginResp, error)
 	// bridges
-	GetNewBridges(context.Context, *ListReq) (*BridgeList, error)
-	SetBridgeState(context.Context, *SetBridgeStateReq) (*GeneralResp, error)
-	GetBridges(context.Context, *ListReq) (*BridgeList, error)
-	AddBridgeTarget(context.Context, *AddBridgeTargetReq) (*GeneralResp, error)
-	GetBridgeLogs(context.Context, *ListReq) (*StringList, error)
-	GetBridgeRouteInfo(context.Context, *ListReq) (*StringList, error)
-	GetBridgeSystemStat(context.Context, *ListReq) (*StringList, error)
-	TailBridgeLogs(*JoinStreamReq, GW_TailBridgeLogsServer) error
+	BridgeListNew(context.Context, *ListReq) (*BridgeList, error)
+	BridgeSetState(context.Context, *SetBridgeStateReq) (*GeneralResp, error)
+	BridgesList(context.Context, *ListReq) (*BridgeList, error)
+	BridgeAddTarget(context.Context, *AddBridgeTargetReq) (*GeneralResp, error)
+	BridgeLogs(context.Context, *ListReq) (*StringList, error)
+	BridgeRouteInfo(context.Context, *ListReq) (*StringList, error)
+	BridgeSystemStat(context.Context, *ListReq) (*StringList, error)
+	BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error
 	// domains
-	AddDomain(context.Context, *DomainReq) (*GeneralResp, error)
-	ListDomains(context.Context, *ListReq) (*ManagedDomains, error)
-	VerifyDomain(context.Context, *DomainReq) (*GeneralResp, error)
+	DomainAdd(context.Context, *DomainReq) (*GeneralResp, error)
+	DomainList(context.Context, *ListReq) (*ManagedDomains, error)
+	DomainVerify(context.Context, *DomainReq) (*GeneralResp, error)
 	mustEmbedUnimplementedGWServer()
 }
 
@@ -220,38 +220,38 @@ type UnimplementedGWServer struct {
 func (UnimplementedGWServer) Login(context.Context, *LoginReq) (*LoginResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedGWServer) GetNewBridges(context.Context, *ListReq) (*BridgeList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetNewBridges not implemented")
+func (UnimplementedGWServer) BridgeListNew(context.Context, *ListReq) (*BridgeList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeListNew not implemented")
 }
-func (UnimplementedGWServer) SetBridgeState(context.Context, *SetBridgeStateReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetBridgeState not implemented")
+func (UnimplementedGWServer) BridgeSetState(context.Context, *SetBridgeStateReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeSetState not implemented")
 }
-func (UnimplementedGWServer) GetBridges(context.Context, *ListReq) (*BridgeList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBridges not implemented")
+func (UnimplementedGWServer) BridgesList(context.Context, *ListReq) (*BridgeList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgesList not implemented")
 }
-func (UnimplementedGWServer) AddBridgeTarget(context.Context, *AddBridgeTargetReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddBridgeTarget not implemented")
+func (UnimplementedGWServer) BridgeAddTarget(context.Context, *AddBridgeTargetReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeAddTarget not implemented")
 }
-func (UnimplementedGWServer) GetBridgeLogs(context.Context, *ListReq) (*StringList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBridgeLogs not implemented")
+func (UnimplementedGWServer) BridgeLogs(context.Context, *ListReq) (*StringList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeLogs not implemented")
 }
-func (UnimplementedGWServer) GetBridgeRouteInfo(context.Context, *ListReq) (*StringList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBridgeRouteInfo not implemented")
+func (UnimplementedGWServer) BridgeRouteInfo(context.Context, *ListReq) (*StringList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeRouteInfo not implemented")
 }
-func (UnimplementedGWServer) GetBridgeSystemStat(context.Context, *ListReq) (*StringList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBridgeSystemStat not implemented")
+func (UnimplementedGWServer) BridgeSystemStat(context.Context, *ListReq) (*StringList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeSystemStat not implemented")
 }
-func (UnimplementedGWServer) TailBridgeLogs(*JoinStreamReq, GW_TailBridgeLogsServer) error {
-	return status.Errorf(codes.Unimplemented, "method TailBridgeLogs not implemented")
+func (UnimplementedGWServer) BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error {
+	return status.Errorf(codes.Unimplemented, "method BridgeStreamLogs not implemented")
 }
-func (UnimplementedGWServer) AddDomain(context.Context, *DomainReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddDomain not implemented")
+func (UnimplementedGWServer) DomainAdd(context.Context, *DomainReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DomainAdd not implemented")
 }
-func (UnimplementedGWServer) ListDomains(context.Context, *ListReq) (*ManagedDomains, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListDomains not implemented")
+func (UnimplementedGWServer) DomainList(context.Context, *ListReq) (*ManagedDomains, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DomainList not implemented")
 }
-func (UnimplementedGWServer) VerifyDomain(context.Context, *DomainReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method VerifyDomain not implemented")
+func (UnimplementedGWServer) DomainVerify(context.Context, *DomainReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DomainVerify not implemented")
 }
 func (UnimplementedGWServer) mustEmbedUnimplementedGWServer() {}
 
@@ -284,203 +284,203 @@ func _GW_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_GetNewBridges_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgeListNew_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).GetNewBridges(ctx, in)
+		return srv.(GWServer).BridgeListNew(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_GetNewBridges_FullMethodName,
+		FullMethod: GW_BridgeListNew_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).GetNewBridges(ctx, req.(*ListReq))
+		return srv.(GWServer).BridgeListNew(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_SetBridgeState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgeSetState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SetBridgeStateReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).SetBridgeState(ctx, in)
+		return srv.(GWServer).BridgeSetState(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_SetBridgeState_FullMethodName,
+		FullMethod: GW_BridgeSetState_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).SetBridgeState(ctx, req.(*SetBridgeStateReq))
+		return srv.(GWServer).BridgeSetState(ctx, req.(*SetBridgeStateReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_GetBridges_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgesList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).GetBridges(ctx, in)
+		return srv.(GWServer).BridgesList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_GetBridges_FullMethodName,
+		FullMethod: GW_BridgesList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).GetBridges(ctx, req.(*ListReq))
+		return srv.(GWServer).BridgesList(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_AddBridgeTarget_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgeAddTarget_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddBridgeTargetReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).AddBridgeTarget(ctx, in)
+		return srv.(GWServer).BridgeAddTarget(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_AddBridgeTarget_FullMethodName,
+		FullMethod: GW_BridgeAddTarget_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).AddBridgeTarget(ctx, req.(*AddBridgeTargetReq))
+		return srv.(GWServer).BridgeAddTarget(ctx, req.(*AddBridgeTargetReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_GetBridgeLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgeLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).GetBridgeLogs(ctx, in)
+		return srv.(GWServer).BridgeLogs(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_GetBridgeLogs_FullMethodName,
+		FullMethod: GW_BridgeLogs_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).GetBridgeLogs(ctx, req.(*ListReq))
+		return srv.(GWServer).BridgeLogs(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_GetBridgeRouteInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgeRouteInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).GetBridgeRouteInfo(ctx, in)
+		return srv.(GWServer).BridgeRouteInfo(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_GetBridgeRouteInfo_FullMethodName,
+		FullMethod: GW_BridgeRouteInfo_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).GetBridgeRouteInfo(ctx, req.(*ListReq))
+		return srv.(GWServer).BridgeRouteInfo(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_GetBridgeSystemStat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgeSystemStat_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).GetBridgeSystemStat(ctx, in)
+		return srv.(GWServer).BridgeSystemStat(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_GetBridgeSystemStat_FullMethodName,
+		FullMethod: GW_BridgeSystemStat_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).GetBridgeSystemStat(ctx, req.(*ListReq))
+		return srv.(GWServer).BridgeSystemStat(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_TailBridgeLogs_Handler(srv interface{}, stream grpc.ServerStream) error {
+func _GW_BridgeStreamLogs_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(JoinStreamReq)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(GWServer).TailBridgeLogs(m, &gWTailBridgeLogsServer{stream})
+	return srv.(GWServer).BridgeStreamLogs(m, &gWBridgeStreamLogsServer{stream})
 }
 
-type GW_TailBridgeLogsServer interface {
+type GW_BridgeStreamLogsServer interface {
 	Send(*LogMsg) error
 	grpc.ServerStream
 }
 
-type gWTailBridgeLogsServer struct {
+type gWBridgeStreamLogsServer struct {
 	grpc.ServerStream
 }
 
-func (x *gWTailBridgeLogsServer) Send(m *LogMsg) error {
+func (x *gWBridgeStreamLogsServer) Send(m *LogMsg) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _GW_AddDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_DomainAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DomainReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).AddDomain(ctx, in)
+		return srv.(GWServer).DomainAdd(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_AddDomain_FullMethodName,
+		FullMethod: GW_DomainAdd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).AddDomain(ctx, req.(*DomainReq))
+		return srv.(GWServer).DomainAdd(ctx, req.(*DomainReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_ListDomains_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_DomainList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).ListDomains(ctx, in)
+		return srv.(GWServer).DomainList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_ListDomains_FullMethodName,
+		FullMethod: GW_DomainList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).ListDomains(ctx, req.(*ListReq))
+		return srv.(GWServer).DomainList(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_VerifyDomain_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_DomainVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DomainReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).VerifyDomain(ctx, in)
+		return srv.(GWServer).DomainVerify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_VerifyDomain_FullMethodName,
+		FullMethod: GW_DomainVerify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).VerifyDomain(ctx, req.(*DomainReq))
+		return srv.(GWServer).DomainVerify(ctx, req.(*DomainReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -497,50 +497,50 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GW_Login_Handler,
 		},
 		{
-			MethodName: "GetNewBridges",
-			Handler:    _GW_GetNewBridges_Handler,
+			MethodName: "BridgeListNew",
+			Handler:    _GW_BridgeListNew_Handler,
 		},
 		{
-			MethodName: "SetBridgeState",
-			Handler:    _GW_SetBridgeState_Handler,
+			MethodName: "BridgeSetState",
+			Handler:    _GW_BridgeSetState_Handler,
 		},
 		{
-			MethodName: "GetBridges",
-			Handler:    _GW_GetBridges_Handler,
+			MethodName: "BridgesList",
+			Handler:    _GW_BridgesList_Handler,
 		},
 		{
-			MethodName: "AddBridgeTarget",
-			Handler:    _GW_AddBridgeTarget_Handler,
+			MethodName: "BridgeAddTarget",
+			Handler:    _GW_BridgeAddTarget_Handler,
 		},
 		{
-			MethodName: "GetBridgeLogs",
-			Handler:    _GW_GetBridgeLogs_Handler,
+			MethodName: "BridgeLogs",
+			Handler:    _GW_BridgeLogs_Handler,
 		},
 		{
-			MethodName: "GetBridgeRouteInfo",
-			Handler:    _GW_GetBridgeRouteInfo_Handler,
+			MethodName: "BridgeRouteInfo",
+			Handler:    _GW_BridgeRouteInfo_Handler,
 		},
 		{
-			MethodName: "GetBridgeSystemStat",
-			Handler:    _GW_GetBridgeSystemStat_Handler,
+			MethodName: "BridgeSystemStat",
+			Handler:    _GW_BridgeSystemStat_Handler,
 		},
 		{
-			MethodName: "AddDomain",
-			Handler:    _GW_AddDomain_Handler,
+			MethodName: "DomainAdd",
+			Handler:    _GW_DomainAdd_Handler,
 		},
 		{
-			MethodName: "ListDomains",
-			Handler:    _GW_ListDomains_Handler,
+			MethodName: "DomainList",
+			Handler:    _GW_DomainList_Handler,
 		},
 		{
-			MethodName: "VerifyDomain",
-			Handler:    _GW_VerifyDomain_Handler,
+			MethodName: "DomainVerify",
+			Handler:    _GW_DomainVerify_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "TailBridgeLogs",
-			Handler:       _GW_TailBridgeLogs_Handler,
+			StreamName:    "BridgeStreamLogs",
+			Handler:       _GW_BridgeStreamLogs_Handler,
 			ServerStreams: true,
 		},
 	},
