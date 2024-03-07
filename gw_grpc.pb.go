@@ -22,7 +22,7 @@ const (
 	GW_Login_FullMethodName            = "/gwconn.GW/Login"
 	GW_BridgeListNew_FullMethodName    = "/gwconn.GW/BridgeListNew"
 	GW_BridgeSetState_FullMethodName   = "/gwconn.GW/BridgeSetState"
-	GW_BridgesList_FullMethodName      = "/gwconn.GW/BridgesList"
+	GW_BridgeList_FullMethodName       = "/gwconn.GW/BridgeList"
 	GW_BridgeAddTarget_FullMethodName  = "/gwconn.GW/BridgeAddTarget"
 	GW_BridgeLogs_FullMethodName       = "/gwconn.GW/BridgeLogs"
 	GW_BridgeRouteInfo_FullMethodName  = "/gwconn.GW/BridgeRouteInfo"
@@ -39,9 +39,9 @@ const (
 type GWClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	// bridges
-	BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error)
+	BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeListResp, error)
 	BridgeSetState(ctx context.Context, in *SetBridgeStateReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	BridgesList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error)
+	BridgeList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeListResp, error)
 	BridgeAddTarget(ctx context.Context, in *AddBridgeTargetReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	BridgeLogs(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
 	BridgeRouteInfo(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*StringList, error)
@@ -70,8 +70,8 @@ func (c *gWClient) Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOpt
 	return out, nil
 }
 
-func (c *gWClient) BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error) {
-	out := new(BridgeList)
+func (c *gWClient) BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeListResp, error) {
+	out := new(BridgeListResp)
 	err := c.cc.Invoke(ctx, GW_BridgeListNew_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -88,9 +88,9 @@ func (c *gWClient) BridgeSetState(ctx context.Context, in *SetBridgeStateReq, op
 	return out, nil
 }
 
-func (c *gWClient) BridgesList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeList, error) {
-	out := new(BridgeList)
-	err := c.cc.Invoke(ctx, GW_BridgesList_FullMethodName, in, out, opts...)
+func (c *gWClient) BridgeList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*BridgeListResp, error) {
+	out := new(BridgeListResp)
+	err := c.cc.Invoke(ctx, GW_BridgeList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -198,9 +198,9 @@ func (c *gWClient) DomainVerify(ctx context.Context, in *DomainReq, opts ...grpc
 type GWServer interface {
 	Login(context.Context, *LoginReq) (*LoginResp, error)
 	// bridges
-	BridgeListNew(context.Context, *ListReq) (*BridgeList, error)
+	BridgeListNew(context.Context, *ListReq) (*BridgeListResp, error)
 	BridgeSetState(context.Context, *SetBridgeStateReq) (*GeneralResp, error)
-	BridgesList(context.Context, *ListReq) (*BridgeList, error)
+	BridgeList(context.Context, *ListReq) (*BridgeListResp, error)
 	BridgeAddTarget(context.Context, *AddBridgeTargetReq) (*GeneralResp, error)
 	BridgeLogs(context.Context, *ListReq) (*StringList, error)
 	BridgeRouteInfo(context.Context, *ListReq) (*StringList, error)
@@ -220,14 +220,14 @@ type UnimplementedGWServer struct {
 func (UnimplementedGWServer) Login(context.Context, *LoginReq) (*LoginResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedGWServer) BridgeListNew(context.Context, *ListReq) (*BridgeList, error) {
+func (UnimplementedGWServer) BridgeListNew(context.Context, *ListReq) (*BridgeListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BridgeListNew not implemented")
 }
 func (UnimplementedGWServer) BridgeSetState(context.Context, *SetBridgeStateReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BridgeSetState not implemented")
 }
-func (UnimplementedGWServer) BridgesList(context.Context, *ListReq) (*BridgeList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BridgesList not implemented")
+func (UnimplementedGWServer) BridgeList(context.Context, *ListReq) (*BridgeListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeList not implemented")
 }
 func (UnimplementedGWServer) BridgeAddTarget(context.Context, *AddBridgeTargetReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BridgeAddTarget not implemented")
@@ -320,20 +320,20 @@ func _GW_BridgeSetState_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_BridgesList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_BridgeList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).BridgesList(ctx, in)
+		return srv.(GWServer).BridgeList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_BridgesList_FullMethodName,
+		FullMethod: GW_BridgeList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).BridgesList(ctx, req.(*ListReq))
+		return srv.(GWServer).BridgeList(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -505,8 +505,8 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GW_BridgeSetState_Handler,
 		},
 		{
-			MethodName: "BridgesList",
-			Handler:    _GW_BridgesList_Handler,
+			MethodName: "BridgeList",
+			Handler:    _GW_BridgeList_Handler,
 		},
 		{
 			MethodName: "BridgeAddTarget",

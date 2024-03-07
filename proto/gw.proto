@@ -13,9 +13,9 @@ service GW {
   rpc Login(LoginReq) returns (LoginResp) {}
 
   // bridges
-  rpc BridgeListNew(ListReq) returns (BridgeList) {} 
+  rpc BridgeListNew(ListReq) returns (BridgeListResp) {} 
   rpc BridgeSetState(SetBridgeStateReq) returns (GeneralResp) {}
-  rpc BridgesList(ListReq) returns (BridgeList) {}
+  rpc BridgeList(ListReq) returns (BridgeListResp) {}
   rpc BridgeAddTarget(AddBridgeTargetReq) returns (GeneralResp) {}
   rpc BridgeLogs(ListReq) returns (StringList) {}
   rpc BridgeRouteInfo(ListReq) returns (StringList) {}
@@ -28,7 +28,7 @@ service GW {
   rpc DomainVerify(DomainReq) returns (GeneralResp) {}
 }
 
-message BridgeList {
+message BridgeListResp {
     repeated BridgeInfo bridges = 1;
 }
 
