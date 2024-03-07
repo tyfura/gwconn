@@ -10,13 +10,13 @@ package gwconn;
 
 // Interface exported by the server.
 service Bridge {
-  rpc LoginBridge(LoginReq) returns (LoginResp) {}
-  rpc RegisterBridge(BridgeInfo) returns (RegisterResp) {} 
-  rpc GetVpn(VpnReq) returns (VpnCfg) {}
-  rpc GetTargetStream(JoinStreamReq) returns (stream Targets) {}
-  rpc DnsAcmeChanger(DnsChangerReq) returns (GeneralResp) {}
-  rpc SendStat(BridgeStat) returns (GeneralResp) {}
-  rpc SendLog(LogMsg) returns (GeneralResp) {}
+  rpc BLogin(LoginReq) returns (LoginResp) {}
+  rpc BRegister(BridgeInfo) returns (RegisterResp) {} 
+  rpc BVpn(VpnReq) returns (VpnCfg) {}
+  rpc BStat(BridgeStat) returns (GeneralResp) {}
+  rpc BLog(LogMsg) returns (GeneralResp) {}
+  rpc BTargetStream(JoinStreamReq) returns (stream Targets) {}
+  rpc BDnsChall(DnsChallReq) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
 }
 
@@ -32,7 +32,7 @@ message Targets {
   uint32 typ = 5;
 }
 
-message DnsChangerReq {
+message DnsChallReq {
   bool isSet = 1;
   string fqdn = 2;
   string val = 3;
