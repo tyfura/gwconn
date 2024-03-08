@@ -42,8 +42,8 @@ message DomainReq {
 }
 
 message AddBridgeTargetReq {
-  string domain = 1;
-  string proto = 2;
+  string bridgeId = 1;
+  string fqdn = 2;
   string addr = 3;
 }
 
