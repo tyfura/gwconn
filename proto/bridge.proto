@@ -15,21 +15,13 @@ service Bridge {
   rpc BVpn(VpnReq) returns (VpnCfg) {}
   rpc BStat(BridgeStat) returns (GeneralResp) {}
   rpc BLog(LogMsg) returns (GeneralResp) {}
-  rpc BTargetStream(JoinStreamReq) returns (stream Targets) {}
+  rpc BTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
   rpc BDnsChall(DnsChallReq) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
 }
 
 message RegisterResp {
   string key = 1;
-}
-
-message Targets {
-  uint32 act = 1;
-  string targeId = 2;
-  string fqdn = 3;
-  string addr = 4;
-  uint32 typ = 5;
 }
 
 message DnsChallReq {

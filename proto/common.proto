@@ -49,6 +49,15 @@ message BridgeStat {
   repeated NetworkStat net = 8;
 }
 
+message BridgeTarget {
+  uint32 act = 1;
+  uint32 typ = 2;
+  string bridgeId = 3;
+  string fqdn = 4;
+  string addr = 5;
+}
+
+
 message NetworkStat {
   string interface =1;
   uint64 rx = 2;

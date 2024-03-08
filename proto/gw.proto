@@ -16,7 +16,7 @@ service GW {
   rpc BridgeListNew(ListReq) returns (BridgeListResp) {} 
   rpc BridgeSetState(SetBridgeStateReq) returns (GeneralResp) {}
   rpc BridgeList(ListReq) returns (BridgeListResp) {}
-  rpc BridgeAddTarget(AddBridgeTargetReq) returns (GeneralResp) {}
+  rpc BridgeAddTarget(BridgeTarget) returns (GeneralResp) {}
   rpc BridgeLogs(ListReq) returns (StringList) {}
   rpc BridgeRouteInfo(ListReq) returns (StringList) {}
   rpc BridgeSystemStat(ListReq) returns (StringList) {}
@@ -41,11 +41,6 @@ message DomainReq {
   string fqdn = 1;
 }
 
-message AddBridgeTargetReq {
-  string bridgeId = 1;
-  string fqdn = 2;
-  string addr = 3;
-}
 
 message ManagedDomain {
   string fqdn = 1;

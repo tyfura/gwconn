@@ -110,7 +110,7 @@ func (c *bridgeClient) BTargetStream(ctx context.Context, in *JoinStreamReq, opt
 }
 
 type Bridge_BTargetStreamClient interface {
-	Recv() (*Targets, error)
+	Recv() (*BridgeTarget, error)
 	grpc.ClientStream
 }
 
@@ -118,8 +118,8 @@ type bridgeBTargetStreamClient struct {
 	grpc.ClientStream
 }
 
-func (x *bridgeBTargetStreamClient) Recv() (*Targets, error) {
-	m := new(Targets)
+func (x *bridgeBTargetStreamClient) Recv() (*BridgeTarget, error) {
+	m := new(BridgeTarget)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -286,7 +286,7 @@ func _Bridge_BTargetStream_Handler(srv interface{}, stream grpc.ServerStream) er
 }
 
 type Bridge_BTargetStreamServer interface {
-	Send(*Targets) error
+	Send(*BridgeTarget) error
 	grpc.ServerStream
 }
 
@@ -294,7 +294,7 @@ type bridgeBTargetStreamServer struct {
 	grpc.ServerStream
 }
 
-func (x *bridgeBTargetStreamServer) Send(m *Targets) error {
+func (x *bridgeBTargetStreamServer) Send(m *BridgeTarget) error {
 	return x.ServerStream.SendMsg(m)
 }
 
