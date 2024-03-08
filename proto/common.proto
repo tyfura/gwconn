@@ -55,6 +55,7 @@ message BridgeTarget {
   string bridgeId = 3;
   string fqdn = 4;
   string addr = 5;
+  string proto = 6;
 }
 
 
