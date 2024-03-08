@@ -39,16 +39,20 @@ message BridgeInfo {
 }
 
 message BridgeStat {
-  uint32 cpuTotalUsage = 1;
-  uint32 cpuBridgeUsage = 2;
-  uint64 ramTotal = 3;
-  uint32 ramTotalUsage = 4;
-  uint32 ramBridgeUsage = 5;
-  uint64 diskTotal = 6;
-  uint32 diskUsage = 7;
-  uint32 connsGw = 8;
-  uint32 connsBridge = 9;
-  uint64 uptime = 10;
+  int64 cpuNum = 1;
+  uint64 cpuTotal = 2;
+  uint64 cpuIdle = 3;
+  uint64 cpuUser = 4;
+  uint64 ramTotal = 5;
+  uint64 ramUsed = 6;
+  uint64 uptime = 7;
+  repeated NetworkStat net = 8;
+}
+
+message NetworkStat {
+  string interface =1;
+  uint64 rx = 2;
+  uint64 tx = 3;
 }
 
 message RouteStat {
