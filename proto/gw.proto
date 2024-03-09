@@ -36,6 +36,7 @@ message UserReq {
   string uname = 2;
   string pass = 3;
   string role = 4;
+  string email = 5;
 }
 
 message BridgeListResp {
