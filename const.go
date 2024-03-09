@@ -4,12 +4,12 @@ const (
 	GW_RpcPort = "42000"
 )
 
-// Bridge targets actions
+// General actions
 const (
-	BridgeTargetActAdd = iota + 1
-	BridgeTargetActDel
-	BridgeTargetActDisable
-	BridgeTargetActEnable
+	GeneralActAdd = iota + 1
+	GeneralActDel
+	GeneralActDisable
+	GeneralActEnable
 )
 
 // Bridge targets type
