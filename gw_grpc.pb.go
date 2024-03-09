@@ -31,6 +31,7 @@ const (
 	GW_DomainAdd_FullMethodName        = "/gwconn.GW/DomainAdd"
 	GW_DomainList_FullMethodName       = "/gwconn.GW/DomainList"
 	GW_DomainVerify_FullMethodName     = "/gwconn.GW/DomainVerify"
+	GW_User_FullMethodName             = "/gwconn.GW/User"
 )
 
 // GWClient is the client API for GW service.
@@ -51,6 +52,8 @@ type GWClient interface {
 	DomainAdd(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	DomainList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ManagedDomains, error)
 	DomainVerify(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	// users
+	User(ctx context.Context, in *UserReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
 type gWClient struct {
@@ -192,6 +195,15 @@ func (c *gWClient) DomainVerify(ctx context.Context, in *DomainReq, opts ...grpc
 	return out, nil
 }
 
+func (c *gWClient) User(ctx context.Context, in *UserReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_User_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GWServer is the server API for GW service.
 // All implementations must embed UnimplementedGWServer
 // for forward compatibility
@@ -210,6 +222,8 @@ type GWServer interface {
 	DomainAdd(context.Context, *DomainReq) (*GeneralResp, error)
 	DomainList(context.Context, *ListReq) (*ManagedDomains, error)
 	DomainVerify(context.Context, *DomainReq) (*GeneralResp, error)
+	// users
+	User(context.Context, *UserReq) (*GeneralResp, error)
 	mustEmbedUnimplementedGWServer()
 }
 
@@ -252,6 +266,9 @@ func (UnimplementedGWServer) DomainList(context.Context, *ListReq) (*ManagedDoma
 }
 func (UnimplementedGWServer) DomainVerify(context.Context, *DomainReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DomainVerify not implemented")
+}
+func (UnimplementedGWServer) User(context.Context, *UserReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method User not implemented")
 }
 func (UnimplementedGWServer) mustEmbedUnimplementedGWServer() {}
 
@@ -485,6 +502,24 @@ func _GW_DomainVerify_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GW_User_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).User(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_User_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).User(ctx, req.(*UserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GW_ServiceDesc is the grpc.ServiceDesc for GW service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -535,6 +570,10 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DomainVerify",
 			Handler:    _GW_DomainVerify_Handler,
+		},
+		{
+			MethodName: "User",
+			Handler:    _GW_User_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

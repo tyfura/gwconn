@@ -26,6 +26,16 @@ service GW {
   rpc DomainAdd(DomainReq) returns (GeneralResp) {}
   rpc DomainList(ListReq) returns (ManagedDomains) {}
   rpc DomainVerify(DomainReq) returns (GeneralResp) {}
+
+  // users
+  rpc User(UserReq) returns (GeneralResp) {}
+}
+
+message UserReq {
+  uint32 act = 1;
+  string uname = 2;
+  string pass = 3;
+  string role = 4;
 }
 
 message BridgeListResp {
