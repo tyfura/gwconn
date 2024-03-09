@@ -13,10 +13,6 @@ message GeneralResp {
     bool ok = 1;
 }
 
-message StringList {
-    repeated string arr = 1;
-}
-
 message ListReq {
     uint32 page = 1;
     uint32 recs = 2;
@@ -32,10 +28,14 @@ message LoginResp {
 }
 
 message BridgeInfo {
-    string bridgeId = 1;
+    string bid = 1;
     string hostname = 2;
     string os = 3;
     string arch = 4;
+}
+
+message Bridges {
+  repeated BridgeInfo bridge = 1;
 }
 
 message BridgeStat {
@@ -49,8 +49,12 @@ message BridgeStat {
   repeated NetworkStat net = 8;
 }
 
+message BridgeStats {
+  repeated BridgeStat stat = 1;
+}
+
 message BridgeTarget {
-  uint32 act = 1;
+  Action act = 1;
   uint32 typ = 2;
   string bridgeId = 3;
   string fqdn = 4;
@@ -80,6 +84,10 @@ message LogMsg {
   string mgs = 3;
 }
 
+message Logs {
+  repeated LogMsg log = 1;
+}
+
 message VpnReq {}
 
 message VpnCfg {
@@ -92,3 +100,12 @@ message VpnCfg {
   string allowedIps = 7;
   string endpoint = 8;
 }
+
+enum Action {
+  Empty = 0;
+	Add = 1;
+	Delete = 2;
+	Enable = 3;
+	Disable = 4;
+}
+

@@ -13,35 +13,56 @@ service GW {
   rpc Login(LoginReq) returns (LoginResp) {}
 
   // bridges
-  rpc BridgeListNew(ListReq) returns (BridgeListResp) {} 
+  rpc BridgeListNew(ListReq) returns (ListResponse) {} 
   rpc BridgeSetState(SetBridgeStateReq) returns (GeneralResp) {}
-  rpc BridgeList(ListReq) returns (BridgeListResp) {}
+  rpc BridgeList(ListReq) returns (ListResponse) {}
   rpc BridgeAddTarget(BridgeTarget) returns (GeneralResp) {}
-  rpc BridgeLogs(ListReq) returns (StringList) {}
-  rpc BridgeRouteInfo(ListReq) returns (StringList) {}
-  rpc BridgeSystemStat(ListReq) returns (StringList) {}
+  rpc BridgeLogs(ListReq) returns (ListResponse) {}
+  rpc BridgeRouteInfo(ListReq) returns (ListResponse) {}
+  rpc BridgeSystemStat(ListReq) returns (ListResponse) {}
   rpc BridgeStreamLogs(JoinStreamReq) returns (stream LogMsg) {}
 
   // domains
   rpc DomainAdd(DomainReq) returns (GeneralResp) {}
-  rpc DomainList(ListReq) returns (ManagedDomains) {}
+  rpc DomainList(ListReq) returns (ListResponse) {}
   rpc DomainVerify(DomainReq) returns (GeneralResp) {}
 
   // users
-  rpc User(UserReq) returns (GeneralResp) {}
+  rpc UserManage(UserManageReq) returns (GeneralResp) {}
+  rpc UserList(ListReq) returns (ListResponse) {}
 }
 
-message UserReq {
-  uint32 act = 1;
-  string uname = 2;
+message UserManageReq {
+    Action act = 1;
+    User user = 2;
+}
+
+
+message User {
+  string uname = 1;
+  string uid = 2;
   string pass = 3;
   string role = 4;
   string email = 5;
 }
 
-message BridgeListResp {
-    repeated BridgeInfo bridges = 1;
+message ListResponse {
+  uint32 total = 1;
+  uint32 page = 2;
+  uint32 perPage = 3; 
+  oneof list {
+    Users users = 4;
+    Bridges bridges = 5;
+    Domains domains = 6;
+    Logs logs = 7;
+    BridgeStats bridgeStats = 8;
+  }
 }
+
+message Users {
+  repeated User user = 1;
+}
+
 
 message SetBridgeStateReq {
   string id = 1;
@@ -53,11 +74,11 @@ message DomainReq {
 }
 
 
-message ManagedDomain {
+message Domain {
   string fqdn = 1;
   uint32 state = 2;
 }
 
-message ManagedDomains {
-  repeated ManagedDomain list = 1;
+message Domains {
+  repeated Domain domains = 1;
 }
