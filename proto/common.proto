@@ -15,7 +15,6 @@ message GeneralResp {
 
 message ListReq {
     uint32 page = 1;
-    uint32 recs = 2;
 }
 
 message LoginReq {
