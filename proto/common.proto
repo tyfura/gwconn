@@ -54,7 +54,7 @@ message BridgeStats {
 
 message BridgeTarget {
   Action act = 1;
-  uint32 typ = 2;
+  ConnType typ = 2;
   string bridgeId = 3;
   string fqdn = 4;
   string addr = 5;
