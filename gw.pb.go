@@ -65,7 +65,7 @@ func (x *UserManageReq) GetAct() Action {
 	if x != nil {
 		return x.Act
 	}
-	return Action_ActEmpty
+	return Action_NoAction
 }
 
 func (x *UserManageReq) GetUser() *User {
