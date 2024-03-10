@@ -101,10 +101,17 @@ message VpnCfg {
 }
 
 enum Action {
-  Empty = 0;
-	Add = 1;
-	Delete = 2;
-	Enable = 3;
-	Disable = 4;
+  ActEmpty = 0;
+	ActAdd = 1;
+	ActDelete = 2;
+	ActEnable = 3;
+	ActDisable = 4;
 }
 
+enum ConnType {
+  ConnTypeEmpty = 0;
+  ConnTypeHttp = 1;
+  ConnTypeHttps = 2;
+  ConnTypeTcp = 3;
+  ConnTypeUnixSocket = 4;
+}
