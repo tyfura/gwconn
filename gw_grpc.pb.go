@@ -33,6 +33,8 @@ const (
 	GW_DomainVerify_FullMethodName     = "/gwconn.GW/DomainVerify"
 	GW_UserManage_FullMethodName       = "/gwconn.GW/UserManage"
 	GW_UserList_FullMethodName         = "/gwconn.GW/UserList"
+	GW_PolicyManage_FullMethodName     = "/gwconn.GW/PolicyManage"
+	GW_PolicyList_FullMethodName       = "/gwconn.GW/PolicyList"
 )
 
 // GWClient is the client API for GW service.
@@ -56,6 +58,9 @@ type GWClient interface {
 	// users
 	UserManage(ctx context.Context, in *UserManageReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	UserList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
+	// IP policies
+	PolicyManage(ctx context.Context, in *PolicyManageReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	PolicyList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 }
 
 type gWClient struct {
@@ -215,6 +220,24 @@ func (c *gWClient) UserList(ctx context.Context, in *ListReq, opts ...grpc.CallO
 	return out, nil
 }
 
+func (c *gWClient) PolicyManage(ctx context.Context, in *PolicyManageReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_PolicyManage_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) PolicyList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error) {
+	out := new(ListResponse)
+	err := c.cc.Invoke(ctx, GW_PolicyList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GWServer is the server API for GW service.
 // All implementations must embed UnimplementedGWServer
 // for forward compatibility
@@ -236,6 +259,9 @@ type GWServer interface {
 	// users
 	UserManage(context.Context, *UserManageReq) (*GeneralResp, error)
 	UserList(context.Context, *ListReq) (*ListResponse, error)
+	// IP policies
+	PolicyManage(context.Context, *PolicyManageReq) (*GeneralResp, error)
+	PolicyList(context.Context, *ListReq) (*ListResponse, error)
 	mustEmbedUnimplementedGWServer()
 }
 
@@ -284,6 +310,12 @@ func (UnimplementedGWServer) UserManage(context.Context, *UserManageReq) (*Gener
 }
 func (UnimplementedGWServer) UserList(context.Context, *ListReq) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserList not implemented")
+}
+func (UnimplementedGWServer) PolicyManage(context.Context, *PolicyManageReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyManage not implemented")
+}
+func (UnimplementedGWServer) PolicyList(context.Context, *ListReq) (*ListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyList not implemented")
 }
 func (UnimplementedGWServer) mustEmbedUnimplementedGWServer() {}
 
@@ -553,6 +585,42 @@ func _GW_UserList_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GW_PolicyManage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PolicyManageReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).PolicyManage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_PolicyManage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).PolicyManage(ctx, req.(*PolicyManageReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_PolicyList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).PolicyList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_PolicyList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).PolicyList(ctx, req.(*ListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GW_ServiceDesc is the grpc.ServiceDesc for GW service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -611,6 +679,14 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserList",
 			Handler:    _GW_UserList_Handler,
+		},
+		{
+			MethodName: "PolicyManage",
+			Handler:    _GW_PolicyManage_Handler,
+		},
+		{
+			MethodName: "PolicyList",
+			Handler:    _GW_PolicyList_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

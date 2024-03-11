@@ -58,7 +58,7 @@ message BridgeTarget {
   string bridgeId = 3;
   string fqdn = 4;
   string addr = 5;
-  string proto = 6;
+  string policyId = 6;
 }
 
 
@@ -104,8 +104,9 @@ enum Action {
   NoAction = 0;
 	Add = 1;
 	Delete = 2;
-	Enable = 3;
-	Disable = 4;
+  Modify = 3;
+	Enable = 4;
+	Disable = 5;
 }
 
 enum ConnType {

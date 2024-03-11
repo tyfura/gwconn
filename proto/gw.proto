@@ -30,6 +30,15 @@ service GW {
   // users
   rpc UserManage(UserManageReq) returns (GeneralResp) {}
   rpc UserList(ListReq) returns (ListResponse) {}
+
+  // IP policies
+  rpc PolicyManage(PolicyManageReq) returns (GeneralResp) {}
+  rpc PolicyList(ListReq) returns (ListResponse) {}
+}
+
+message PolicyManageReq {
+    Action act = 1;
+    Policy policy = 2;
 }
 
 message UserManageReq {
@@ -56,6 +65,7 @@ message ListResponse {
     Domains domains = 6;
     Logs logs = 7;
     BridgeStats bridgeStats = 8;
+    Policies policies = 9;
   }
 }
 
@@ -63,10 +73,14 @@ message Users {
   repeated User user = 1;
 }
 
+message Policies {
+  repeated Policy policy = 1;
+}
 
 message SetBridgeStateReq {
   string id = 1;
-  uint32 state = 2;
+  string newHostname = 2;
+  uint32 state = 3;
 }
 
 message DomainReq {
@@ -81,4 +95,17 @@ message Domain {
 
 message Domains {
   repeated Domain domains = 1;
+}
+
+enum PolicyType {
+  PublicAccess = 0;
+  AllowList = 1;
+  BlockList = 2;
+}
+
+message Policy {
+  string id = 1;
+  string name = 2;
+  PolicyType type = 3;
+  repeated string ips = 4;
 }
