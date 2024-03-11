@@ -80,7 +80,7 @@ message Policies {
 message SetBridgeStateReq {
   string id = 1;
   string hostname = 2;
-  uint32 state = 3;
+  State state = 3;
 }
 
 message DomainReq {
