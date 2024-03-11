@@ -79,7 +79,7 @@ message Policies {
 
 message SetBridgeStateReq {
   string id = 1;
-  string newHostname = 2;
+  string hostname = 2;
   uint32 state = 3;
 }
 
