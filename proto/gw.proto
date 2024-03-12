@@ -78,9 +78,8 @@ message Policies {
 }
 
 enum BridgeAckT {
-  New = 0;
-  Ack = 1;
-  Deny = 2;
+  Deny = 0;
+  Acknowledge = 1;
 }
 
 message BridgeAckReq {
