@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	GW_Login_FullMethodName            = "/gwconn.GW/Login"
 	GW_BridgeListNew_FullMethodName    = "/gwconn.GW/BridgeListNew"
-	GW_BridgeSetState_FullMethodName   = "/gwconn.GW/BridgeSetState"
+	GW_BridgeAck_FullMethodName        = "/gwconn.GW/BridgeAck"
 	GW_BridgeList_FullMethodName       = "/gwconn.GW/BridgeList"
 	GW_BridgeAddTarget_FullMethodName  = "/gwconn.GW/BridgeAddTarget"
 	GW_BridgeLogs_FullMethodName       = "/gwconn.GW/BridgeLogs"
@@ -44,7 +44,7 @@ type GWClient interface {
 	Login(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
 	// bridges
 	BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
-	BridgeSetState(ctx context.Context, in *SetBridgeStateReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	BridgeAck(ctx context.Context, in *BridgeAckReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	BridgeList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeAddTarget(ctx context.Context, in *BridgeTarget, opts ...grpc.CallOption) (*GeneralResp, error)
 	BridgeLogs(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
@@ -89,9 +89,9 @@ func (c *gWClient) BridgeListNew(ctx context.Context, in *ListReq, opts ...grpc.
 	return out, nil
 }
 
-func (c *gWClient) BridgeSetState(ctx context.Context, in *SetBridgeStateReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) BridgeAck(ctx context.Context, in *BridgeAckReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_BridgeSetState_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_BridgeAck_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +245,7 @@ type GWServer interface {
 	Login(context.Context, *LoginReq) (*LoginResp, error)
 	// bridges
 	BridgeListNew(context.Context, *ListReq) (*ListResponse, error)
-	BridgeSetState(context.Context, *SetBridgeStateReq) (*GeneralResp, error)
+	BridgeAck(context.Context, *BridgeAckReq) (*GeneralResp, error)
 	BridgeList(context.Context, *ListReq) (*ListResponse, error)
 	BridgeAddTarget(context.Context, *BridgeTarget) (*GeneralResp, error)
 	BridgeLogs(context.Context, *ListReq) (*ListResponse, error)
@@ -275,8 +275,8 @@ func (UnimplementedGWServer) Login(context.Context, *LoginReq) (*LoginResp, erro
 func (UnimplementedGWServer) BridgeListNew(context.Context, *ListReq) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BridgeListNew not implemented")
 }
-func (UnimplementedGWServer) BridgeSetState(context.Context, *SetBridgeStateReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BridgeSetState not implemented")
+func (UnimplementedGWServer) BridgeAck(context.Context, *BridgeAckReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BridgeAck not implemented")
 }
 func (UnimplementedGWServer) BridgeList(context.Context, *ListReq) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BridgeList not implemented")
@@ -366,20 +366,20 @@ func _GW_BridgeListNew_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_BridgeSetState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetBridgeStateReq)
+func _GW_BridgeAck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BridgeAckReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).BridgeSetState(ctx, in)
+		return srv.(GWServer).BridgeAck(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_BridgeSetState_FullMethodName,
+		FullMethod: GW_BridgeAck_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).BridgeSetState(ctx, req.(*SetBridgeStateReq))
+		return srv.(GWServer).BridgeAck(ctx, req.(*BridgeAckReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -637,8 +637,8 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GW_BridgeListNew_Handler,
 		},
 		{
-			MethodName: "BridgeSetState",
-			Handler:    _GW_BridgeSetState_Handler,
+			MethodName: "BridgeAck",
+			Handler:    _GW_BridgeAck_Handler,
 		},
 		{
 			MethodName: "BridgeList",

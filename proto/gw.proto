@@ -14,7 +14,7 @@ service GW {
 
   // bridges
   rpc BridgeListNew(ListReq) returns (ListResponse) {} 
-  rpc BridgeSetState(SetBridgeStateReq) returns (GeneralResp) {}
+  rpc BridgeAck(BridgeAckReq) returns (GeneralResp) {}
   rpc BridgeList(ListReq) returns (ListResponse) {}
   rpc BridgeAddTarget(BridgeTarget) returns (GeneralResp) {}
   rpc BridgeLogs(ListReq) returns (ListResponse) {}
@@ -77,10 +77,16 @@ message Policies {
   repeated Policy policy = 1;
 }
 
-message SetBridgeStateReq {
+enum BridgeAckT {
+  New = 0;
+  Ack = 1;
+  Deny = 2;
+}
+
+message BridgeAckReq {
   string id = 1;
-  string hostname = 2;
-  State state = 3;
+  string newName = 2;
+  BridgeAckT bridgeAck = 3;
 }
 
 message DomainReq {
