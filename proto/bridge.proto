@@ -11,7 +11,7 @@ package gwconn;
 // Interface exported by the server.
 service Bridge {
   rpc BLogin(LoginReq) returns (LoginResp) {}
-  rpc BRegister(BridgeInfo) returns (RegisterResp) {} 
+  rpc BRegister(RegisterReq) returns (RegisterResp) {} 
   rpc BVpn(VpnReq) returns (VpnCfg) {}
   rpc BStat(BridgeStat) returns (GeneralResp) {}
   rpc BLog(LogMsg) returns (GeneralResp) {}
@@ -19,6 +19,14 @@ service Bridge {
   rpc BDnsChall(DnsChallReq) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
 }
+
+message RegisterReq {
+    string bid = 1;
+    string hostname = 2;
+    string os = 3;
+    string arch = 4;
+}
+
 
 message RegisterResp {
   string key = 1;

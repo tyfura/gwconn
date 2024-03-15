@@ -33,7 +33,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BridgeClient interface {
 	BLogin(ctx context.Context, in *LoginReq, opts ...grpc.CallOption) (*LoginResp, error)
-	BRegister(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error)
+	BRegister(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error)
 	BVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnCfg, error)
 	BStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -58,7 +58,7 @@ func (c *bridgeClient) BLogin(ctx context.Context, in *LoginReq, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *bridgeClient) BRegister(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*RegisterResp, error) {
+func (c *bridgeClient) BRegister(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*RegisterResp, error) {
 	out := new(RegisterResp)
 	err := c.cc.Invoke(ctx, Bridge_BRegister_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -140,7 +140,7 @@ func (c *bridgeClient) BDnsChall(ctx context.Context, in *DnsChallReq, opts ...g
 // for forward compatibility
 type BridgeServer interface {
 	BLogin(context.Context, *LoginReq) (*LoginResp, error)
-	BRegister(context.Context, *BridgeInfo) (*RegisterResp, error)
+	BRegister(context.Context, *RegisterReq) (*RegisterResp, error)
 	BVpn(context.Context, *VpnReq) (*VpnCfg, error)
 	BStat(context.Context, *BridgeStat) (*GeneralResp, error)
 	BLog(context.Context, *LogMsg) (*GeneralResp, error)
@@ -156,7 +156,7 @@ type UnimplementedBridgeServer struct {
 func (UnimplementedBridgeServer) BLogin(context.Context, *LoginReq) (*LoginResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BLogin not implemented")
 }
-func (UnimplementedBridgeServer) BRegister(context.Context, *BridgeInfo) (*RegisterResp, error) {
+func (UnimplementedBridgeServer) BRegister(context.Context, *RegisterReq) (*RegisterResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BRegister not implemented")
 }
 func (UnimplementedBridgeServer) BVpn(context.Context, *VpnReq) (*VpnCfg, error) {
@@ -206,7 +206,7 @@ func _Bridge_BLogin_Handler(srv interface{}, ctx context.Context, dec func(inter
 }
 
 func _Bridge_BRegister_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BridgeInfo)
+	in := new(RegisterReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -218,7 +218,7 @@ func _Bridge_BRegister_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: Bridge_BRegister_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeServer).BRegister(ctx, req.(*BridgeInfo))
+		return srv.(BridgeServer).BRegister(ctx, req.(*RegisterReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

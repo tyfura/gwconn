@@ -28,10 +28,12 @@ message LoginResp {
 
 message BridgeInfo {
     string bid = 1;
-    string hostname = 2;
+    string name = 2;
     string os = 3;
     string arch = 4;
+    string state = 5;
 }
+
 
 message Bridges {
   repeated BridgeInfo bridge = 1;
