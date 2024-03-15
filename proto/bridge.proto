@@ -16,7 +16,7 @@ service Bridge {
   rpc BStat(BridgeStat) returns (GeneralResp) {}
   rpc BLog(LogMsg) returns (GeneralResp) {}
   rpc BTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
-  rpc BDnsChall(DnsChallReq) returns (GeneralResp) {}
+  rpc BAcmeChall(AcmeChallReq) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
 }
 
@@ -32,9 +32,10 @@ message RegisterResp {
   string key = 1;
 }
 
-message DnsChallReq {
+message AcmeChallReq {
   bool isSet = 1;
   string fqdn = 2;
-  string val = 3;
+  string token = 3;
+  string val = 4;
 }
 

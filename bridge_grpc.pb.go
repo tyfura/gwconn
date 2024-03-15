@@ -25,7 +25,7 @@ const (
 	Bridge_BStat_FullMethodName         = "/gwconn.Bridge/BStat"
 	Bridge_BLog_FullMethodName          = "/gwconn.Bridge/BLog"
 	Bridge_BTargetStream_FullMethodName = "/gwconn.Bridge/BTargetStream"
-	Bridge_BDnsChall_FullMethodName     = "/gwconn.Bridge/BDnsChall"
+	Bridge_BAcmeChall_FullMethodName    = "/gwconn.Bridge/BAcmeChall"
 )
 
 // BridgeClient is the client API for Bridge service.
@@ -38,7 +38,7 @@ type BridgeClient interface {
 	BStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
 	BTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_BTargetStreamClient, error)
-	BDnsChall(ctx context.Context, in *DnsChallReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
 type bridgeClient struct {
@@ -126,9 +126,9 @@ func (x *bridgeBTargetStreamClient) Recv() (*BridgeTarget, error) {
 	return m, nil
 }
 
-func (c *bridgeClient) BDnsChall(ctx context.Context, in *DnsChallReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *bridgeClient) BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, Bridge_BDnsChall_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Bridge_BAcmeChall_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +145,7 @@ type BridgeServer interface {
 	BStat(context.Context, *BridgeStat) (*GeneralResp, error)
 	BLog(context.Context, *LogMsg) (*GeneralResp, error)
 	BTargetStream(*JoinStreamReq, Bridge_BTargetStreamServer) error
-	BDnsChall(context.Context, *DnsChallReq) (*GeneralResp, error)
+	BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error)
 	mustEmbedUnimplementedBridgeServer()
 }
 
@@ -171,8 +171,8 @@ func (UnimplementedBridgeServer) BLog(context.Context, *LogMsg) (*GeneralResp, e
 func (UnimplementedBridgeServer) BTargetStream(*JoinStreamReq, Bridge_BTargetStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method BTargetStream not implemented")
 }
-func (UnimplementedBridgeServer) BDnsChall(context.Context, *DnsChallReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BDnsChall not implemented")
+func (UnimplementedBridgeServer) BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BAcmeChall not implemented")
 }
 func (UnimplementedBridgeServer) mustEmbedUnimplementedBridgeServer() {}
 
@@ -298,20 +298,20 @@ func (x *bridgeBTargetStreamServer) Send(m *BridgeTarget) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _Bridge_BDnsChall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DnsChallReq)
+func _Bridge_BAcmeChall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AcmeChallReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeServer).BDnsChall(ctx, in)
+		return srv.(BridgeServer).BAcmeChall(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bridge_BDnsChall_FullMethodName,
+		FullMethod: Bridge_BAcmeChall_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeServer).BDnsChall(ctx, req.(*DnsChallReq))
+		return srv.(BridgeServer).BAcmeChall(ctx, req.(*AcmeChallReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -344,8 +344,8 @@ var Bridge_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bridge_BLog_Handler,
 		},
 		{
-			MethodName: "BDnsChall",
-			Handler:    _Bridge_BDnsChall_Handler,
+			MethodName: "BAcmeChall",
+			Handler:    _Bridge_BAcmeChall_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
