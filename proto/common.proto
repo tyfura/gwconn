@@ -28,7 +28,7 @@ message LoginResp {
 
 message BridgeInfo {
     string bid = 1;
-    string name = 2;
+    string hostname = 2;
     string os = 3;
     string arch = 4;
     string state = 5;
