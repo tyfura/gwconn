@@ -24,7 +24,7 @@ const (
 	Bridge_BVpn_FullMethodName       = "/gwconn.Bridge/BVpn"
 	Bridge_BStat_FullMethodName      = "/gwconn.Bridge/BStat"
 	Bridge_BLog_FullMethodName       = "/gwconn.Bridge/BLog"
-	Bridge_BCmd_FullMethodName       = "/gwconn.Bridge/BCmd"
+	Bridge_BTarget_FullMethodName    = "/gwconn.Bridge/BTarget"
 	Bridge_BAcmeChall_FullMethodName = "/gwconn.Bridge/BAcmeChall"
 )
 
@@ -37,7 +37,7 @@ type BridgeClient interface {
 	BVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnCfg, error)
 	BStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
-	BCmd(ctx context.Context, in *CmdReq, opts ...grpc.CallOption) (*BridgeCmd, error)
+	BTarget(ctx context.Context, in *EmptyReq, opts ...grpc.CallOption) (*BridgeTarget, error)
 	BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
@@ -94,9 +94,9 @@ func (c *bridgeClient) BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOp
 	return out, nil
 }
 
-func (c *bridgeClient) BCmd(ctx context.Context, in *CmdReq, opts ...grpc.CallOption) (*BridgeCmd, error) {
-	out := new(BridgeCmd)
-	err := c.cc.Invoke(ctx, Bridge_BCmd_FullMethodName, in, out, opts...)
+func (c *bridgeClient) BTarget(ctx context.Context, in *EmptyReq, opts ...grpc.CallOption) (*BridgeTarget, error) {
+	out := new(BridgeTarget)
+	err := c.cc.Invoke(ctx, Bridge_BTarget_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ type BridgeServer interface {
 	BVpn(context.Context, *VpnReq) (*VpnCfg, error)
 	BStat(context.Context, *BridgeStat) (*GeneralResp, error)
 	BLog(context.Context, *LogMsg) (*GeneralResp, error)
-	BCmd(context.Context, *CmdReq) (*BridgeCmd, error)
+	BTarget(context.Context, *EmptyReq) (*BridgeTarget, error)
 	BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error)
 	mustEmbedUnimplementedBridgeServer()
 }
@@ -145,8 +145,8 @@ func (UnimplementedBridgeServer) BStat(context.Context, *BridgeStat) (*GeneralRe
 func (UnimplementedBridgeServer) BLog(context.Context, *LogMsg) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BLog not implemented")
 }
-func (UnimplementedBridgeServer) BCmd(context.Context, *CmdReq) (*BridgeCmd, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method BCmd not implemented")
+func (UnimplementedBridgeServer) BTarget(context.Context, *EmptyReq) (*BridgeTarget, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BTarget not implemented")
 }
 func (UnimplementedBridgeServer) BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BAcmeChall not implemented")
@@ -254,20 +254,20 @@ func _Bridge_BLog_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bridge_BCmd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CmdReq)
+func _Bridge_BTarget_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EmptyReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(BridgeServer).BCmd(ctx, in)
+		return srv.(BridgeServer).BTarget(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Bridge_BCmd_FullMethodName,
+		FullMethod: Bridge_BTarget_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BridgeServer).BCmd(ctx, req.(*CmdReq))
+		return srv.(BridgeServer).BTarget(ctx, req.(*EmptyReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -318,8 +318,8 @@ var Bridge_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bridge_BLog_Handler,
 		},
 		{
-			MethodName: "BCmd",
-			Handler:    _Bridge_BCmd_Handler,
+			MethodName: "BTarget",
+			Handler:    _Bridge_BTarget_Handler,
 		},
 		{
 			MethodName: "BAcmeChall",
