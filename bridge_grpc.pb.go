@@ -19,13 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Bridge_BLogin_FullMethodName        = "/gwconn.Bridge/BLogin"
-	Bridge_BRegister_FullMethodName     = "/gwconn.Bridge/BRegister"
-	Bridge_BVpn_FullMethodName          = "/gwconn.Bridge/BVpn"
-	Bridge_BStat_FullMethodName         = "/gwconn.Bridge/BStat"
-	Bridge_BLog_FullMethodName          = "/gwconn.Bridge/BLog"
-	Bridge_BTargetStream_FullMethodName = "/gwconn.Bridge/BTargetStream"
-	Bridge_BAcmeChall_FullMethodName    = "/gwconn.Bridge/BAcmeChall"
+	Bridge_BLogin_FullMethodName     = "/gwconn.Bridge/BLogin"
+	Bridge_BRegister_FullMethodName  = "/gwconn.Bridge/BRegister"
+	Bridge_BVpn_FullMethodName       = "/gwconn.Bridge/BVpn"
+	Bridge_BStat_FullMethodName      = "/gwconn.Bridge/BStat"
+	Bridge_BLog_FullMethodName       = "/gwconn.Bridge/BLog"
+	Bridge_BCmd_FullMethodName       = "/gwconn.Bridge/BCmd"
+	Bridge_BAcmeChall_FullMethodName = "/gwconn.Bridge/BAcmeChall"
 )
 
 // BridgeClient is the client API for Bridge service.
@@ -37,7 +37,7 @@ type BridgeClient interface {
 	BVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnCfg, error)
 	BStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
-	BTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_BTargetStreamClient, error)
+	BCmd(ctx context.Context, in *CmdReq, opts ...grpc.CallOption) (*BridgeCmd, error)
 	BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
@@ -94,36 +94,13 @@ func (c *bridgeClient) BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOp
 	return out, nil
 }
 
-func (c *bridgeClient) BTargetStream(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (Bridge_BTargetStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Bridge_ServiceDesc.Streams[0], Bridge_BTargetStream_FullMethodName, opts...)
+func (c *bridgeClient) BCmd(ctx context.Context, in *CmdReq, opts ...grpc.CallOption) (*BridgeCmd, error) {
+	out := new(BridgeCmd)
+	err := c.cc.Invoke(ctx, Bridge_BCmd_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &bridgeBTargetStreamClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type Bridge_BTargetStreamClient interface {
-	Recv() (*BridgeTarget, error)
-	grpc.ClientStream
-}
-
-type bridgeBTargetStreamClient struct {
-	grpc.ClientStream
-}
-
-func (x *bridgeBTargetStreamClient) Recv() (*BridgeTarget, error) {
-	m := new(BridgeTarget)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
+	return out, nil
 }
 
 func (c *bridgeClient) BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error) {
@@ -144,7 +121,7 @@ type BridgeServer interface {
 	BVpn(context.Context, *VpnReq) (*VpnCfg, error)
 	BStat(context.Context, *BridgeStat) (*GeneralResp, error)
 	BLog(context.Context, *LogMsg) (*GeneralResp, error)
-	BTargetStream(*JoinStreamReq, Bridge_BTargetStreamServer) error
+	BCmd(context.Context, *CmdReq) (*BridgeCmd, error)
 	BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error)
 	mustEmbedUnimplementedBridgeServer()
 }
@@ -168,8 +145,8 @@ func (UnimplementedBridgeServer) BStat(context.Context, *BridgeStat) (*GeneralRe
 func (UnimplementedBridgeServer) BLog(context.Context, *LogMsg) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BLog not implemented")
 }
-func (UnimplementedBridgeServer) BTargetStream(*JoinStreamReq, Bridge_BTargetStreamServer) error {
-	return status.Errorf(codes.Unimplemented, "method BTargetStream not implemented")
+func (UnimplementedBridgeServer) BCmd(context.Context, *CmdReq) (*BridgeCmd, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BCmd not implemented")
 }
 func (UnimplementedBridgeServer) BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BAcmeChall not implemented")
@@ -277,25 +254,22 @@ func _Bridge_BLog_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Bridge_BTargetStream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(JoinStreamReq)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
+func _Bridge_BCmd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CmdReq)
+	if err := dec(in); err != nil {
+		return nil, err
 	}
-	return srv.(BridgeServer).BTargetStream(m, &bridgeBTargetStreamServer{stream})
-}
-
-type Bridge_BTargetStreamServer interface {
-	Send(*BridgeTarget) error
-	grpc.ServerStream
-}
-
-type bridgeBTargetStreamServer struct {
-	grpc.ServerStream
-}
-
-func (x *bridgeBTargetStreamServer) Send(m *BridgeTarget) error {
-	return x.ServerStream.SendMsg(m)
+	if interceptor == nil {
+		return srv.(BridgeServer).BCmd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bridge_BCmd_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BridgeServer).BCmd(ctx, req.(*CmdReq))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Bridge_BAcmeChall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -344,16 +318,14 @@ var Bridge_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Bridge_BLog_Handler,
 		},
 		{
+			MethodName: "BCmd",
+			Handler:    _Bridge_BCmd_Handler,
+		},
+		{
 			MethodName: "BAcmeChall",
 			Handler:    _Bridge_BAcmeChall_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "BTargetStream",
-			Handler:       _Bridge_BTargetStream_Handler,
-			ServerStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "bridge.proto",
 }

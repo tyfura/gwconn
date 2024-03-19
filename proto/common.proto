@@ -7,7 +7,6 @@ option java_outer_classname = "";
 
 package gwconn;
 
-message JoinStreamReq {}
 
 message GeneralResp {
     bool ok = 1;

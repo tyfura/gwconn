@@ -36,6 +36,8 @@ service GW {
   rpc PolicyList(ListReq) returns (ListResponse) {}
 }
 
+message JoinStreamReq {}
+
 message PolicyManageReq {
     Action act = 1;
     Policy policy = 2;

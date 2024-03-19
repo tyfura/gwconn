@@ -15,9 +15,17 @@ service Bridge {
   rpc BVpn(VpnReq) returns (VpnCfg) {}
   rpc BStat(BridgeStat) returns (GeneralResp) {}
   rpc BLog(LogMsg) returns (GeneralResp) {}
-  rpc BTargetStream(JoinStreamReq) returns (stream BridgeTarget) {}
+  rpc BCmd(CmdReq) returns (BridgeCmd) {}
   rpc BAcmeChall(AcmeChallReq) returns (GeneralResp) {}
 //  rpc GetVpnCfg() returns (GeneralResp) {}
+}
+
+message CmdReq {}
+
+message BridgeCmd {
+  oneof cmd {
+    BridgeTarget target = 1;
+  }
 }
 
 message RegisterReq {
@@ -37,4 +45,3 @@ message AcmeChallReq {
   string token = 2;
   string val = 3;
 }
-
