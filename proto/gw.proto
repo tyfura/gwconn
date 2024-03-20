@@ -22,11 +22,6 @@ service GW {
   rpc BridgeSystemStat(ListReq) returns (ListResponse) {}
   rpc BridgeStreamLogs(JoinStreamReq) returns (stream LogMsg) {}
 
-  // domains
-  rpc DomainAdd(DomainReq) returns (GeneralResp) {}
-  rpc DomainList(ListReq) returns (ListResponse) {}
-  rpc DomainVerify(DomainReq) returns (GeneralResp) {}
-
   // users
   rpc UserManage(UserManageReq) returns (GeneralResp) {}
   rpc UserList(ListReq) returns (ListResponse) {}
@@ -64,10 +59,9 @@ message ListResponse {
   oneof list {
     Users users = 4;
     Bridges bridges = 5;
-    Domains domains = 6;
-    Logs logs = 7;
-    BridgeStats bridgeStats = 8;
-    Policies policies = 9;
+    Logs logs = 6;
+    BridgeStats bridgeStats = 7;
+    Policies policies = 8;
   }
 }
 
@@ -90,19 +84,6 @@ message BridgeAckReq {
   BridgeAckT bridgeAck = 3;
 }
 
-message DomainReq {
-  string fqdn = 1;
-}
-
-
-message Domain {
-  string fqdn = 1;
-  State state = 2;
-}
-
-message Domains {
-  repeated Domain domains = 1;
-}
 
 enum PolicyType {
   PublicAccess = 0;

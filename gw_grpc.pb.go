@@ -28,9 +28,6 @@ const (
 	GW_BridgeRouteInfo_FullMethodName  = "/gwconn.GW/BridgeRouteInfo"
 	GW_BridgeSystemStat_FullMethodName = "/gwconn.GW/BridgeSystemStat"
 	GW_BridgeStreamLogs_FullMethodName = "/gwconn.GW/BridgeStreamLogs"
-	GW_DomainAdd_FullMethodName        = "/gwconn.GW/DomainAdd"
-	GW_DomainList_FullMethodName       = "/gwconn.GW/DomainList"
-	GW_DomainVerify_FullMethodName     = "/gwconn.GW/DomainVerify"
 	GW_UserManage_FullMethodName       = "/gwconn.GW/UserManage"
 	GW_UserList_FullMethodName         = "/gwconn.GW/UserList"
 	GW_PolicyManage_FullMethodName     = "/gwconn.GW/PolicyManage"
@@ -51,10 +48,6 @@ type GWClient interface {
 	BridgeRouteInfo(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeStreamLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_BridgeStreamLogsClient, error)
-	// domains
-	DomainAdd(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	DomainList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
-	DomainVerify(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	// users
 	UserManage(ctx context.Context, in *UserManageReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	UserList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
@@ -175,33 +168,6 @@ func (x *gWBridgeStreamLogsClient) Recv() (*LogMsg, error) {
 	return m, nil
 }
 
-func (c *gWClient) DomainAdd(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_DomainAdd_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gWClient) DomainList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error) {
-	out := new(ListResponse)
-	err := c.cc.Invoke(ctx, GW_DomainList_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gWClient) DomainVerify(ctx context.Context, in *DomainReq, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_DomainVerify_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *gWClient) UserManage(ctx context.Context, in *UserManageReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_UserManage_FullMethodName, in, out, opts...)
@@ -252,10 +218,6 @@ type GWServer interface {
 	BridgeRouteInfo(context.Context, *ListReq) (*ListResponse, error)
 	BridgeSystemStat(context.Context, *ListReq) (*ListResponse, error)
 	BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error
-	// domains
-	DomainAdd(context.Context, *DomainReq) (*GeneralResp, error)
-	DomainList(context.Context, *ListReq) (*ListResponse, error)
-	DomainVerify(context.Context, *DomainReq) (*GeneralResp, error)
 	// users
 	UserManage(context.Context, *UserManageReq) (*GeneralResp, error)
 	UserList(context.Context, *ListReq) (*ListResponse, error)
@@ -295,15 +257,6 @@ func (UnimplementedGWServer) BridgeSystemStat(context.Context, *ListReq) (*ListR
 }
 func (UnimplementedGWServer) BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error {
 	return status.Errorf(codes.Unimplemented, "method BridgeStreamLogs not implemented")
-}
-func (UnimplementedGWServer) DomainAdd(context.Context, *DomainReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DomainAdd not implemented")
-}
-func (UnimplementedGWServer) DomainList(context.Context, *ListReq) (*ListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DomainList not implemented")
-}
-func (UnimplementedGWServer) DomainVerify(context.Context, *DomainReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DomainVerify not implemented")
 }
 func (UnimplementedGWServer) UserManage(context.Context, *UserManageReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserManage not implemented")
@@ -495,60 +448,6 @@ func (x *gWBridgeStreamLogsServer) Send(m *LogMsg) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _GW_DomainAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DomainReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GWServer).DomainAdd(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GW_DomainAdd_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).DomainAdd(ctx, req.(*DomainReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _GW_DomainList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GWServer).DomainList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GW_DomainList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).DomainList(ctx, req.(*ListReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _GW_DomainVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DomainReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GWServer).DomainVerify(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GW_DomainVerify_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).DomainVerify(ctx, req.(*DomainReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _GW_UserManage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UserManageReq)
 	if err := dec(in); err != nil {
@@ -659,18 +558,6 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BridgeSystemStat",
 			Handler:    _GW_BridgeSystemStat_Handler,
-		},
-		{
-			MethodName: "DomainAdd",
-			Handler:    _GW_DomainAdd_Handler,
-		},
-		{
-			MethodName: "DomainList",
-			Handler:    _GW_DomainList_Handler,
-		},
-		{
-			MethodName: "DomainVerify",
-			Handler:    _GW_DomainVerify_Handler,
 		},
 		{
 			MethodName: "UserManage",
