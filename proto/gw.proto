@@ -23,7 +23,9 @@ service GW {
   rpc BridgeStreamLogs(JoinStreamReq) returns (stream LogMsg) {}
 
   // users
-  rpc UserManage(UserManageReq) returns (GeneralResp) {}
+  rpc UserAdd(User) returns (GeneralResp) {}
+  rpc UserChange(User) returns (GeneralResp) {}
+  rpc UserDel(UserDelReq) returns (GeneralResp) {}
   rpc UserList(ListReq) returns (ListResponse) {}
 
   // IP policies
@@ -38,18 +40,19 @@ message PolicyManageReq {
     Policy policy = 2;
 }
 
-message UserManageReq {
-    Action act = 1;
-    User user = 2;
-}
+//message UserManageReq {
+//    Action act = 1;
+//    User user = 2;
+//}
 
+message UserDelReq {
+  string uname = 1;
+}
 
 message User {
   string uname = 1;
-  string uid = 2;
-  string pass = 3;
-  string role = 4;
-  string email = 5;
+  string pass = 2;
+  string role = 3;
 }
 
 message ListResponse {

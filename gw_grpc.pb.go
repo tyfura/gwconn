@@ -28,7 +28,9 @@ const (
 	GW_BridgeRouteInfo_FullMethodName  = "/gwconn.GW/BridgeRouteInfo"
 	GW_BridgeSystemStat_FullMethodName = "/gwconn.GW/BridgeSystemStat"
 	GW_BridgeStreamLogs_FullMethodName = "/gwconn.GW/BridgeStreamLogs"
-	GW_UserManage_FullMethodName       = "/gwconn.GW/UserManage"
+	GW_UserAdd_FullMethodName          = "/gwconn.GW/UserAdd"
+	GW_UserChange_FullMethodName       = "/gwconn.GW/UserChange"
+	GW_UserDel_FullMethodName          = "/gwconn.GW/UserDel"
 	GW_UserList_FullMethodName         = "/gwconn.GW/UserList"
 	GW_PolicyManage_FullMethodName     = "/gwconn.GW/PolicyManage"
 	GW_PolicyList_FullMethodName       = "/gwconn.GW/PolicyList"
@@ -49,7 +51,9 @@ type GWClient interface {
 	BridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeStreamLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_BridgeStreamLogsClient, error)
 	// users
-	UserManage(ctx context.Context, in *UserManageReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	UserAdd(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error)
+	UserChange(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error)
+	UserDel(ctx context.Context, in *UserDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	UserList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	// IP policies
 	PolicyManage(ctx context.Context, in *PolicyManageReq, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -168,9 +172,27 @@ func (x *gWBridgeStreamLogsClient) Recv() (*LogMsg, error) {
 	return m, nil
 }
 
-func (c *gWClient) UserManage(ctx context.Context, in *UserManageReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) UserAdd(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_UserManage_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_UserAdd_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) UserChange(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_UserChange_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) UserDel(ctx context.Context, in *UserDelReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_UserDel_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -219,7 +241,9 @@ type GWServer interface {
 	BridgeSystemStat(context.Context, *ListReq) (*ListResponse, error)
 	BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error
 	// users
-	UserManage(context.Context, *UserManageReq) (*GeneralResp, error)
+	UserAdd(context.Context, *User) (*GeneralResp, error)
+	UserChange(context.Context, *User) (*GeneralResp, error)
+	UserDel(context.Context, *UserDelReq) (*GeneralResp, error)
 	UserList(context.Context, *ListReq) (*ListResponse, error)
 	// IP policies
 	PolicyManage(context.Context, *PolicyManageReq) (*GeneralResp, error)
@@ -258,8 +282,14 @@ func (UnimplementedGWServer) BridgeSystemStat(context.Context, *ListReq) (*ListR
 func (UnimplementedGWServer) BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error {
 	return status.Errorf(codes.Unimplemented, "method BridgeStreamLogs not implemented")
 }
-func (UnimplementedGWServer) UserManage(context.Context, *UserManageReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserManage not implemented")
+func (UnimplementedGWServer) UserAdd(context.Context, *User) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserAdd not implemented")
+}
+func (UnimplementedGWServer) UserChange(context.Context, *User) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserChange not implemented")
+}
+func (UnimplementedGWServer) UserDel(context.Context, *UserDelReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserDel not implemented")
 }
 func (UnimplementedGWServer) UserList(context.Context, *ListReq) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserList not implemented")
@@ -448,20 +478,56 @@ func (x *gWBridgeStreamLogsServer) Send(m *LogMsg) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _GW_UserManage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserManageReq)
+func _GW_UserAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).UserManage(ctx, in)
+		return srv.(GWServer).UserAdd(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_UserManage_FullMethodName,
+		FullMethod: GW_UserAdd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).UserManage(ctx, req.(*UserManageReq))
+		return srv.(GWServer).UserAdd(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_UserChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).UserChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_UserChange_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).UserChange(ctx, req.(*User))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_UserDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserDelReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).UserDel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_UserDel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).UserDel(ctx, req.(*UserDelReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -560,8 +626,16 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GW_BridgeSystemStat_Handler,
 		},
 		{
-			MethodName: "UserManage",
-			Handler:    _GW_UserManage_Handler,
+			MethodName: "UserAdd",
+			Handler:    _GW_UserAdd_Handler,
+		},
+		{
+			MethodName: "UserChange",
+			Handler:    _GW_UserChange_Handler,
+		},
+		{
+			MethodName: "UserDel",
+			Handler:    _GW_UserDel_Handler,
 		},
 		{
 			MethodName: "UserList",
