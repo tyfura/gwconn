@@ -17,7 +17,6 @@ service Bridge {
   rpc BLog(LogMsg) returns (GeneralResp) {}
   rpc BTarget(EmptyReq) returns (BridgeTarget) {}
   rpc BAcmeChall(AcmeChallReq) returns (GeneralResp) {}
-//  rpc GetVpnCfg() returns (GeneralResp) {}
 }
 
 message EmptyReq {}

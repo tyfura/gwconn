@@ -29,16 +29,18 @@ service GW {
   rpc UserList(ListReq) returns (ListResponse) {}
 
   // IP policies
-  rpc PolicyManage(PolicyManageReq) returns (GeneralResp) {}
+  rpc PolicyAdd(Policy) returns (GeneralResp) {}
+  rpc PolicyChange(Policy) returns (GeneralResp) {}
+  rpc PolicyDel(PolicyDelReq) returns (GeneralResp) {}
   rpc PolicyList(ListReq) returns (ListResponse) {}
 }
 
 message JoinStreamReq {}
 
-message PolicyManageReq {
-    Action act = 1;
-    Policy policy = 2;
-}
+//message PolicyManageReq {
+//    Action act = 1;
+//    Policy policy = 2;
+//}
 
 //message UserManageReq {
 //    Action act = 1;
@@ -95,8 +97,11 @@ enum PolicyType {
 }
 
 message Policy {
-  string id = 1;
-  string name = 2;
-  PolicyType type = 3;
-  repeated string ips = 4;
+  string name = 1;
+  PolicyType type = 2;
+  repeated string ips = 3;
+}
+
+message PolicyDelReq {
+  string name = 1;
 }

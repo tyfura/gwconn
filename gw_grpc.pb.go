@@ -32,7 +32,9 @@ const (
 	GW_UserChange_FullMethodName       = "/gwconn.GW/UserChange"
 	GW_UserDel_FullMethodName          = "/gwconn.GW/UserDel"
 	GW_UserList_FullMethodName         = "/gwconn.GW/UserList"
-	GW_PolicyManage_FullMethodName     = "/gwconn.GW/PolicyManage"
+	GW_PolicyAdd_FullMethodName        = "/gwconn.GW/PolicyAdd"
+	GW_PolicyChange_FullMethodName     = "/gwconn.GW/PolicyChange"
+	GW_PolicyDel_FullMethodName        = "/gwconn.GW/PolicyDel"
 	GW_PolicyList_FullMethodName       = "/gwconn.GW/PolicyList"
 )
 
@@ -56,7 +58,9 @@ type GWClient interface {
 	UserDel(ctx context.Context, in *UserDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	UserList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	// IP policies
-	PolicyManage(ctx context.Context, in *PolicyManageReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	PolicyAdd(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*GeneralResp, error)
+	PolicyChange(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*GeneralResp, error)
+	PolicyDel(ctx context.Context, in *PolicyDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	PolicyList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 }
 
@@ -208,9 +212,27 @@ func (c *gWClient) UserList(ctx context.Context, in *ListReq, opts ...grpc.CallO
 	return out, nil
 }
 
-func (c *gWClient) PolicyManage(ctx context.Context, in *PolicyManageReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) PolicyAdd(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_PolicyManage_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_PolicyAdd_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) PolicyChange(ctx context.Context, in *Policy, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_PolicyChange_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) PolicyDel(ctx context.Context, in *PolicyDelReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_PolicyDel_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -246,7 +268,9 @@ type GWServer interface {
 	UserDel(context.Context, *UserDelReq) (*GeneralResp, error)
 	UserList(context.Context, *ListReq) (*ListResponse, error)
 	// IP policies
-	PolicyManage(context.Context, *PolicyManageReq) (*GeneralResp, error)
+	PolicyAdd(context.Context, *Policy) (*GeneralResp, error)
+	PolicyChange(context.Context, *Policy) (*GeneralResp, error)
+	PolicyDel(context.Context, *PolicyDelReq) (*GeneralResp, error)
 	PolicyList(context.Context, *ListReq) (*ListResponse, error)
 	mustEmbedUnimplementedGWServer()
 }
@@ -294,8 +318,14 @@ func (UnimplementedGWServer) UserDel(context.Context, *UserDelReq) (*GeneralResp
 func (UnimplementedGWServer) UserList(context.Context, *ListReq) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserList not implemented")
 }
-func (UnimplementedGWServer) PolicyManage(context.Context, *PolicyManageReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PolicyManage not implemented")
+func (UnimplementedGWServer) PolicyAdd(context.Context, *Policy) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyAdd not implemented")
+}
+func (UnimplementedGWServer) PolicyChange(context.Context, *Policy) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyChange not implemented")
+}
+func (UnimplementedGWServer) PolicyDel(context.Context, *PolicyDelReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PolicyDel not implemented")
 }
 func (UnimplementedGWServer) PolicyList(context.Context, *ListReq) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PolicyList not implemented")
@@ -550,20 +580,56 @@ func _GW_UserList_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_PolicyManage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PolicyManageReq)
+func _GW_PolicyAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Policy)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).PolicyManage(ctx, in)
+		return srv.(GWServer).PolicyAdd(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_PolicyManage_FullMethodName,
+		FullMethod: GW_PolicyAdd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).PolicyManage(ctx, req.(*PolicyManageReq))
+		return srv.(GWServer).PolicyAdd(ctx, req.(*Policy))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_PolicyChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Policy)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).PolicyChange(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_PolicyChange_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).PolicyChange(ctx, req.(*Policy))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_PolicyDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PolicyDelReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).PolicyDel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_PolicyDel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).PolicyDel(ctx, req.(*PolicyDelReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -642,8 +708,16 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GW_UserList_Handler,
 		},
 		{
-			MethodName: "PolicyManage",
-			Handler:    _GW_PolicyManage_Handler,
+			MethodName: "PolicyAdd",
+			Handler:    _GW_PolicyAdd_Handler,
+		},
+		{
+			MethodName: "PolicyChange",
+			Handler:    _GW_PolicyChange_Handler,
+		},
+		{
+			MethodName: "PolicyDel",
+			Handler:    _GW_PolicyDel_Handler,
 		},
 		{
 			MethodName: "PolicyList",
