@@ -7,7 +7,6 @@ option java_outer_classname = "";
 
 package gwconn;
 
-
 message GeneralResp {
     bool ok = 1;
 }
@@ -35,7 +34,7 @@ message BridgeInfo {
 
 
 message Bridges {
-  repeated BridgeInfo bridge = 1;
+  repeated BridgeInfo bridges = 1;
 }
 
 message BridgeStat {
@@ -50,18 +49,16 @@ message BridgeStat {
 }
 
 message BridgeStats {
-  repeated BridgeStat stat = 1;
+  repeated BridgeStat stats = 1;
 }
 
 message BridgeTarget {
-  Action act = 1;
   ConnType typ = 2;
   string bridgeId = 3;
   string fqdn = 4;
   string addr = 5;
   string policyId = 6;
 }
-
 
 message NetworkStat {
   string interface =1;
@@ -85,7 +82,7 @@ message LogMsg {
 }
 
 message Logs {
-  repeated LogMsg log = 1;
+  repeated LogMsg logs = 1;
 }
 
 message VpnReq {}

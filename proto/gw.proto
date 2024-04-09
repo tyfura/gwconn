@@ -16,22 +16,28 @@ service GW {
   rpc BridgeListNew(ListReq) returns (ListResponse) {} 
   rpc BridgeAck(BridgeAckReq) returns (GeneralResp) {}
   rpc BridgeList(ListReq) returns (ListResponse) {}
-  rpc BridgeAddTarget(BridgeTarget) returns (GeneralResp) {}
   rpc BridgeLogs(ListReq) returns (ListResponse) {}
   rpc BridgeRouteInfo(ListReq) returns (ListResponse) {}
   rpc BridgeSystemStat(ListReq) returns (ListResponse) {}
   rpc BridgeStreamLogs(JoinStreamReq) returns (stream LogMsg) {}
 
+  // targets
+  rpc TargetAdd(BridgeTarget) returns (GeneralResp) {}
+  rpc TargetChange(BridgeTarget) returns (GeneralResp) {}
+  rpc TargetDel(DelReq) returns (GeneralResp) {}
+  rpc TargetList(ListReq) returns (ListResponse) {}
+
+
   // users
   rpc UserAdd(User) returns (GeneralResp) {}
   rpc UserChange(User) returns (GeneralResp) {}
-  rpc UserDel(UserDelReq) returns (GeneralResp) {}
+  rpc UserDel(DelReq) returns (GeneralResp) {}
   rpc UserList(ListReq) returns (ListResponse) {}
 
   // IP policies
   rpc PolicyAdd(Policy) returns (GeneralResp) {}
   rpc PolicyChange(Policy) returns (GeneralResp) {}
-  rpc PolicyDel(PolicyDelReq) returns (GeneralResp) {}
+  rpc PolicyDel(DelReq) returns (GeneralResp) {}
   rpc PolicyList(ListReq) returns (ListResponse) {}
 }
 
@@ -46,10 +52,6 @@ message JoinStreamReq {}
 //    Action act = 1;
 //    User user = 2;
 //}
-
-message UserDelReq {
-  string uname = 1;
-}
 
 message User {
   string uname = 1;
@@ -67,16 +69,22 @@ message ListResponse {
     Logs logs = 6;
     BridgeStats bridgeStats = 7;
     Policies policies = 8;
+    Targets targets = 9;
   }
 }
 
 message Users {
-  repeated User user = 1;
+  repeated User users = 1;
 }
 
 message Policies {
-  repeated Policy policy = 1;
+  repeated Policy policies = 1;
 }
+
+message Targets {
+  repeated BridgeTarget targets = 1;
+}
+
 
 enum BridgeAckT {
   Deny = 0;
@@ -102,6 +110,6 @@ message Policy {
   repeated string ips = 3;
 }
 
-message PolicyDelReq {
+message DelReq {
   string name = 1;
 }
