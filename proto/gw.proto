@@ -22,8 +22,8 @@ service GW {
   rpc BridgeStreamLogs(JoinStreamReq) returns (stream LogMsg) {}
 
   // targets
-  rpc TargetAdd(BridgeTarget) returns (GeneralResp) {}
-  rpc TargetChange(BridgeTarget) returns (GeneralResp) {}
+  rpc TargetAdd(Target) returns (GeneralResp) {}
+  rpc TargetChange(Target) returns (GeneralResp) {}
   rpc TargetDel(DelReq) returns (GeneralResp) {}
   rpc TargetList(ListReq) returns (ListResponse) {}
 
@@ -82,7 +82,7 @@ message Policies {
 }
 
 message Targets {
-  repeated BridgeTarget targets = 1;
+  repeated Target targets = 1;
 }
 
 

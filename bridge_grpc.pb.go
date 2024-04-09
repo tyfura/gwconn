@@ -37,7 +37,7 @@ type BridgeClient interface {
 	BVpn(ctx context.Context, in *VpnReq, opts ...grpc.CallOption) (*VpnCfg, error)
 	BStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
-	BTarget(ctx context.Context, in *EmptyReq, opts ...grpc.CallOption) (*BridgeTarget, error)
+	BTarget(ctx context.Context, in *EmptyReq, opts ...grpc.CallOption) (*BridgeTargetAct, error)
 	BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
@@ -94,8 +94,8 @@ func (c *bridgeClient) BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOp
 	return out, nil
 }
 
-func (c *bridgeClient) BTarget(ctx context.Context, in *EmptyReq, opts ...grpc.CallOption) (*BridgeTarget, error) {
-	out := new(BridgeTarget)
+func (c *bridgeClient) BTarget(ctx context.Context, in *EmptyReq, opts ...grpc.CallOption) (*BridgeTargetAct, error) {
+	out := new(BridgeTargetAct)
 	err := c.cc.Invoke(ctx, Bridge_BTarget_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -121,7 +121,7 @@ type BridgeServer interface {
 	BVpn(context.Context, *VpnReq) (*VpnCfg, error)
 	BStat(context.Context, *BridgeStat) (*GeneralResp, error)
 	BLog(context.Context, *LogMsg) (*GeneralResp, error)
-	BTarget(context.Context, *EmptyReq) (*BridgeTarget, error)
+	BTarget(context.Context, *EmptyReq) (*BridgeTargetAct, error)
 	BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error)
 	mustEmbedUnimplementedBridgeServer()
 }
@@ -145,7 +145,7 @@ func (UnimplementedBridgeServer) BStat(context.Context, *BridgeStat) (*GeneralRe
 func (UnimplementedBridgeServer) BLog(context.Context, *LogMsg) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BLog not implemented")
 }
-func (UnimplementedBridgeServer) BTarget(context.Context, *EmptyReq) (*BridgeTarget, error) {
+func (UnimplementedBridgeServer) BTarget(context.Context, *EmptyReq) (*BridgeTargetAct, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BTarget not implemented")
 }
 func (UnimplementedBridgeServer) BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error) {

@@ -52,12 +52,19 @@ message BridgeStats {
   repeated BridgeStat stats = 1;
 }
 
-message BridgeTarget {
+message Target {
+  ConnType typ = 1;
+  string bridgeId = 2;
+  string fqdn = 3;
+  string addr = 4;
+  string policyId = 5;
+}
+
+message BridgeTargetAct {
+  Action act = 1;
   ConnType typ = 2;
-  string bridgeId = 3;
   string fqdn = 4;
   string addr = 5;
-  string policyId = 6;
 }
 
 message NetworkStat {

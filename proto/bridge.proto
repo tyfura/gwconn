@@ -15,7 +15,7 @@ service Bridge {
   rpc BVpn(VpnReq) returns (VpnCfg) {}
   rpc BStat(BridgeStat) returns (GeneralResp) {}
   rpc BLog(LogMsg) returns (GeneralResp) {}
-  rpc BTarget(EmptyReq) returns (BridgeTarget) {}
+  rpc BTarget(EmptyReq) returns (BridgeTargetAct) {}
   rpc BAcmeChall(AcmeChallReq) returns (GeneralResp) {}
 }
 

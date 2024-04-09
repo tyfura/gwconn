@@ -55,8 +55,8 @@ type GWClient interface {
 	BridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeStreamLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_BridgeStreamLogsClient, error)
 	// targets
-	TargetAdd(ctx context.Context, in *BridgeTarget, opts ...grpc.CallOption) (*GeneralResp, error)
-	TargetChange(ctx context.Context, in *BridgeTarget, opts ...grpc.CallOption) (*GeneralResp, error)
+	TargetAdd(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error)
+	TargetChange(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error)
 	TargetDel(ctx context.Context, in *DelReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	TargetList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	// users
@@ -174,7 +174,7 @@ func (x *gWBridgeStreamLogsClient) Recv() (*LogMsg, error) {
 	return m, nil
 }
 
-func (c *gWClient) TargetAdd(ctx context.Context, in *BridgeTarget, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) TargetAdd(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_TargetAdd_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -183,7 +183,7 @@ func (c *gWClient) TargetAdd(ctx context.Context, in *BridgeTarget, opts ...grpc
 	return out, nil
 }
 
-func (c *gWClient) TargetChange(ctx context.Context, in *BridgeTarget, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) TargetChange(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_TargetChange_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -296,8 +296,8 @@ type GWServer interface {
 	BridgeSystemStat(context.Context, *ListReq) (*ListResponse, error)
 	BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error
 	// targets
-	TargetAdd(context.Context, *BridgeTarget) (*GeneralResp, error)
-	TargetChange(context.Context, *BridgeTarget) (*GeneralResp, error)
+	TargetAdd(context.Context, *Target) (*GeneralResp, error)
+	TargetChange(context.Context, *Target) (*GeneralResp, error)
 	TargetDel(context.Context, *DelReq) (*GeneralResp, error)
 	TargetList(context.Context, *ListReq) (*ListResponse, error)
 	// users
@@ -341,10 +341,10 @@ func (UnimplementedGWServer) BridgeSystemStat(context.Context, *ListReq) (*ListR
 func (UnimplementedGWServer) BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error {
 	return status.Errorf(codes.Unimplemented, "method BridgeStreamLogs not implemented")
 }
-func (UnimplementedGWServer) TargetAdd(context.Context, *BridgeTarget) (*GeneralResp, error) {
+func (UnimplementedGWServer) TargetAdd(context.Context, *Target) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TargetAdd not implemented")
 }
-func (UnimplementedGWServer) TargetChange(context.Context, *BridgeTarget) (*GeneralResp, error) {
+func (UnimplementedGWServer) TargetChange(context.Context, *Target) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TargetChange not implemented")
 }
 func (UnimplementedGWServer) TargetDel(context.Context, *DelReq) (*GeneralResp, error) {
@@ -538,7 +538,7 @@ func (x *gWBridgeStreamLogsServer) Send(m *LogMsg) error {
 }
 
 func _GW_TargetAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BridgeTarget)
+	in := new(Target)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -550,13 +550,13 @@ func _GW_TargetAdd_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: GW_TargetAdd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).TargetAdd(ctx, req.(*BridgeTarget))
+		return srv.(GWServer).TargetAdd(ctx, req.(*Target))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _GW_TargetChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BridgeTarget)
+	in := new(Target)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -568,7 +568,7 @@ func _GW_TargetChange_Handler(srv interface{}, ctx context.Context, dec func(int
 		FullMethod: GW_TargetChange_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).TargetChange(ctx, req.(*BridgeTarget))
+		return srv.(GWServer).TargetChange(ctx, req.(*Target))
 	}
 	return interceptor(ctx, in, info, handler)
 }
