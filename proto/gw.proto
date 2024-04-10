@@ -85,6 +85,13 @@ message Targets {
   repeated Target targets = 1;
 }
 
+message Target {
+  ConnType typ = 1;
+  string bridgeName = 2;
+  string fqdn = 3;
+  string addr = 4;
+  string policyName = 5;
+}
 
 enum BridgeAckT {
   Deny = 0;
@@ -92,7 +99,7 @@ enum BridgeAckT {
 }
 
 message BridgeAckReq {
-  string id = 1;
+  string bid = 1;
   string newName = 2;
   BridgeAckT bridgeAck = 3;
 }

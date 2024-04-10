@@ -32,7 +32,6 @@ message BridgeInfo {
     string state = 5;
 }
 
-
 message Bridges {
   repeated BridgeInfo bridges = 1;
 }
@@ -52,13 +51,6 @@ message BridgeStats {
   repeated BridgeStat stats = 1;
 }
 
-message Target {
-  ConnType typ = 1;
-  string bridgeId = 2;
-  string fqdn = 3;
-  string addr = 4;
-  string policyId = 5;
-}
 
 message BridgeTargetAct {
   Action act = 1;
@@ -74,7 +66,7 @@ message NetworkStat {
 }
 
 message RouteStat {
-  string routeId = 1;
+  string routeName = 1;
   uint64 conns = 2;
   uint64 trafOut = 3;
   uint64 trafOutDelta = 4;
