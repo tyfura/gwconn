@@ -16,6 +16,8 @@ service GW {
   rpc BridgeListNew(ListReq) returns (ListResponse) {} 
   rpc BridgeAck(BridgeAckReq) returns (GeneralResp) {}
   rpc BridgeList(ListReq) returns (ListResponse) {}
+  rpc BridgeChange(BridgeInfo) returns (GeneralResp) {}
+  rpc BridgeDel(BridgeInfo) returns (GeneralResp) {}
   rpc BridgeLogs(ListReq) returns (ListResponse) {}
   rpc BridgeRouteInfo(ListReq) returns (ListResponse) {}
   rpc BridgeSystemStat(ListReq) returns (ListResponse) {}
