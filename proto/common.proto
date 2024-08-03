@@ -55,8 +55,8 @@ message BridgeStats {
 message BridgeTargetAct {
   Action act = 1;
   ConnType typ = 2;
-  string fqdn = 4;
-  string addr = 5;
+  string fqdn = 3;
+  string addr = 4;
 }
 
 message NetworkStat {
@@ -119,4 +119,9 @@ enum ConnType {
   Https = 2;
   Tcp = 3;
   UnixSocket = 4;
+}
+
+message TargetDelReq {
+  string Fqdn = 1;
+  string BrId = 2;
 }

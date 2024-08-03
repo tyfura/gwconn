@@ -26,7 +26,7 @@ service GW {
   // targets
   rpc TargetAdd(Target) returns (GeneralResp) {}
   rpc TargetChange(Target) returns (GeneralResp) {}
-  rpc TargetDel(DelReq) returns (GeneralResp) {}
+  rpc TargetDel(TargetDelReq) returns (GeneralResp) {}
   rpc TargetList(ListReq) returns (ListResponse) {}
 
 

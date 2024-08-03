@@ -61,7 +61,7 @@ type GWClient interface {
 	// targets
 	TargetAdd(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error)
 	TargetChange(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error)
-	TargetDel(ctx context.Context, in *DelReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	TargetDel(ctx context.Context, in *TargetDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	TargetList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	// users
 	UserAdd(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -214,7 +214,7 @@ func (c *gWClient) TargetChange(ctx context.Context, in *Target, opts ...grpc.Ca
 	return out, nil
 }
 
-func (c *gWClient) TargetDel(ctx context.Context, in *DelReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) TargetDel(ctx context.Context, in *TargetDelReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_TargetDel_FullMethodName, in, out, opts...)
 	if err != nil {
@@ -322,7 +322,7 @@ type GWServer interface {
 	// targets
 	TargetAdd(context.Context, *Target) (*GeneralResp, error)
 	TargetChange(context.Context, *Target) (*GeneralResp, error)
-	TargetDel(context.Context, *DelReq) (*GeneralResp, error)
+	TargetDel(context.Context, *TargetDelReq) (*GeneralResp, error)
 	TargetList(context.Context, *ListReq) (*ListResponse, error)
 	// users
 	UserAdd(context.Context, *User) (*GeneralResp, error)
@@ -377,7 +377,7 @@ func (UnimplementedGWServer) TargetAdd(context.Context, *Target) (*GeneralResp, 
 func (UnimplementedGWServer) TargetChange(context.Context, *Target) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TargetChange not implemented")
 }
-func (UnimplementedGWServer) TargetDel(context.Context, *DelReq) (*GeneralResp, error) {
+func (UnimplementedGWServer) TargetDel(context.Context, *TargetDelReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TargetDel not implemented")
 }
 func (UnimplementedGWServer) TargetList(context.Context, *ListReq) (*ListResponse, error) {
@@ -640,7 +640,7 @@ func _GW_TargetChange_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _GW_TargetDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelReq)
+	in := new(TargetDelReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -652,7 +652,7 @@ func _GW_TargetDel_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: GW_TargetDel_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).TargetDel(ctx, req.(*DelReq))
+		return srv.(GWServer).TargetDel(ctx, req.(*TargetDelReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
