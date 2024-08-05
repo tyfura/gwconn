@@ -29,10 +29,10 @@ const (
 	GW_BridgeRouteInfo_FullMethodName  = "/gwconn.GW/BridgeRouteInfo"
 	GW_BridgeSystemStat_FullMethodName = "/gwconn.GW/BridgeSystemStat"
 	GW_BridgeStreamLogs_FullMethodName = "/gwconn.GW/BridgeStreamLogs"
-	GW_TargetAdd_FullMethodName        = "/gwconn.GW/TargetAdd"
-	GW_TargetChange_FullMethodName     = "/gwconn.GW/TargetChange"
-	GW_TargetDel_FullMethodName        = "/gwconn.GW/TargetDel"
-	GW_TargetList_FullMethodName       = "/gwconn.GW/TargetList"
+	GW_LinkAdd_FullMethodName          = "/gwconn.GW/LinkAdd"
+	GW_LinkChange_FullMethodName       = "/gwconn.GW/LinkChange"
+	GW_LinkDel_FullMethodName          = "/gwconn.GW/LinkDel"
+	GW_LinkList_FullMethodName         = "/gwconn.GW/LinkList"
 	GW_DomainAdd_FullMethodName        = "/gwconn.GW/DomainAdd"
 	GW_DomainCheck_FullMethodName      = "/gwconn.GW/DomainCheck"
 	GW_DomainDel_FullMethodName        = "/gwconn.GW/DomainDel"
@@ -62,11 +62,11 @@ type GWClient interface {
 	BridgeRouteInfo(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeSystemStat(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeStreamLogs(ctx context.Context, in *JoinStreamReq, opts ...grpc.CallOption) (GW_BridgeStreamLogsClient, error)
-	// targets
-	TargetAdd(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error)
-	TargetChange(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error)
-	TargetDel(ctx context.Context, in *TargetDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	TargetList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
+	// Links
+	LinkAdd(ctx context.Context, in *Link, opts ...grpc.CallOption) (*GeneralResp, error)
+	LinkChange(ctx context.Context, in *Link, opts ...grpc.CallOption) (*GeneralResp, error)
+	LinkDel(ctx context.Context, in *LinkDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
+	LinkList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	// domains
 	DomainAdd(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error)
 	DomainCheck(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -205,36 +205,36 @@ func (x *gWBridgeStreamLogsClient) Recv() (*LogMsg, error) {
 	return m, nil
 }
 
-func (c *gWClient) TargetAdd(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) LinkAdd(ctx context.Context, in *Link, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_TargetAdd_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_LinkAdd_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) TargetChange(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) LinkChange(ctx context.Context, in *Link, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_TargetChange_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_LinkChange_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) TargetDel(ctx context.Context, in *TargetDelReq, opts ...grpc.CallOption) (*GeneralResp, error) {
+func (c *gWClient) LinkDel(ctx context.Context, in *LinkDelReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_TargetDel_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_LinkDel_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *gWClient) TargetList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error) {
+func (c *gWClient) LinkList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error) {
 	out := new(ListResponse)
-	err := c.cc.Invoke(ctx, GW_TargetList_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, GW_LinkList_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -364,11 +364,11 @@ type GWServer interface {
 	BridgeRouteInfo(context.Context, *ListReq) (*ListResponse, error)
 	BridgeSystemStat(context.Context, *ListReq) (*ListResponse, error)
 	BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error
-	// targets
-	TargetAdd(context.Context, *Target) (*GeneralResp, error)
-	TargetChange(context.Context, *Target) (*GeneralResp, error)
-	TargetDel(context.Context, *TargetDelReq) (*GeneralResp, error)
-	TargetList(context.Context, *ListReq) (*ListResponse, error)
+	// Links
+	LinkAdd(context.Context, *Link) (*GeneralResp, error)
+	LinkChange(context.Context, *Link) (*GeneralResp, error)
+	LinkDel(context.Context, *LinkDelReq) (*GeneralResp, error)
+	LinkList(context.Context, *ListReq) (*ListResponse, error)
 	// domains
 	DomainAdd(context.Context, *Domain) (*GeneralResp, error)
 	DomainCheck(context.Context, *Domain) (*GeneralResp, error)
@@ -421,17 +421,17 @@ func (UnimplementedGWServer) BridgeSystemStat(context.Context, *ListReq) (*ListR
 func (UnimplementedGWServer) BridgeStreamLogs(*JoinStreamReq, GW_BridgeStreamLogsServer) error {
 	return status.Errorf(codes.Unimplemented, "method BridgeStreamLogs not implemented")
 }
-func (UnimplementedGWServer) TargetAdd(context.Context, *Target) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TargetAdd not implemented")
+func (UnimplementedGWServer) LinkAdd(context.Context, *Link) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LinkAdd not implemented")
 }
-func (UnimplementedGWServer) TargetChange(context.Context, *Target) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TargetChange not implemented")
+func (UnimplementedGWServer) LinkChange(context.Context, *Link) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LinkChange not implemented")
 }
-func (UnimplementedGWServer) TargetDel(context.Context, *TargetDelReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TargetDel not implemented")
+func (UnimplementedGWServer) LinkDel(context.Context, *LinkDelReq) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LinkDel not implemented")
 }
-func (UnimplementedGWServer) TargetList(context.Context, *ListReq) (*ListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TargetList not implemented")
+func (UnimplementedGWServer) LinkList(context.Context, *ListReq) (*ListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LinkList not implemented")
 }
 func (UnimplementedGWServer) DomainAdd(context.Context, *Domain) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DomainAdd not implemented")
@@ -665,74 +665,74 @@ func (x *gWBridgeStreamLogsServer) Send(m *LogMsg) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func _GW_TargetAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Target)
+func _GW_LinkAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Link)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).TargetAdd(ctx, in)
+		return srv.(GWServer).LinkAdd(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_TargetAdd_FullMethodName,
+		FullMethod: GW_LinkAdd_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).TargetAdd(ctx, req.(*Target))
+		return srv.(GWServer).LinkAdd(ctx, req.(*Link))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_TargetChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Target)
+func _GW_LinkChange_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Link)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).TargetChange(ctx, in)
+		return srv.(GWServer).LinkChange(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_TargetChange_FullMethodName,
+		FullMethod: GW_LinkChange_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).TargetChange(ctx, req.(*Target))
+		return srv.(GWServer).LinkChange(ctx, req.(*Link))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_TargetDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(TargetDelReq)
+func _GW_LinkDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LinkDelReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).TargetDel(ctx, in)
+		return srv.(GWServer).LinkDel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_TargetDel_FullMethodName,
+		FullMethod: GW_LinkDel_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).TargetDel(ctx, req.(*TargetDelReq))
+		return srv.(GWServer).LinkDel(ctx, req.(*LinkDelReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_TargetList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _GW_LinkList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GWServer).TargetList(ctx, in)
+		return srv.(GWServer).LinkList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: GW_TargetList_FullMethodName,
+		FullMethod: GW_LinkList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).TargetList(ctx, req.(*ListReq))
+		return srv.(GWServer).LinkList(ctx, req.(*ListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -997,20 +997,20 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GW_BridgeSystemStat_Handler,
 		},
 		{
-			MethodName: "TargetAdd",
-			Handler:    _GW_TargetAdd_Handler,
+			MethodName: "LinkAdd",
+			Handler:    _GW_LinkAdd_Handler,
 		},
 		{
-			MethodName: "TargetChange",
-			Handler:    _GW_TargetChange_Handler,
+			MethodName: "LinkChange",
+			Handler:    _GW_LinkChange_Handler,
 		},
 		{
-			MethodName: "TargetDel",
-			Handler:    _GW_TargetDel_Handler,
+			MethodName: "LinkDel",
+			Handler:    _GW_LinkDel_Handler,
 		},
 		{
-			MethodName: "TargetList",
-			Handler:    _GW_TargetList_Handler,
+			MethodName: "LinkList",
+			Handler:    _GW_LinkList_Handler,
 		},
 		{
 			MethodName: "DomainAdd",

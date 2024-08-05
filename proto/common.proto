@@ -55,17 +55,18 @@ message BridgeStats {
 message BridgeCmd {
   string LogId = 1;
   oneof cmd {
-    link link = 2;
+    Link link = 2;
     cert cert = 3;
     sys sys = 4;
   }
 }
 
-message link {
-  Action act = 1;
-  ConnType typ = 2;
+message Link {
+  ConnType typ = 1;
+  string brId = 2;
   string fqdn = 3;
   string addr = 4;
+  string policyName = 5;
 }
 
 message cert {
@@ -143,7 +144,3 @@ enum ConnType {
   UnixSocket = 4;
 }
 
-message TargetDelReq {
-  string Fqdn = 1;
-  string BrId = 2;
-}
