@@ -33,6 +33,10 @@ const (
 	GW_TargetChange_FullMethodName     = "/gwconn.GW/TargetChange"
 	GW_TargetDel_FullMethodName        = "/gwconn.GW/TargetDel"
 	GW_TargetList_FullMethodName       = "/gwconn.GW/TargetList"
+	GW_DomainAdd_FullMethodName        = "/gwconn.GW/DomainAdd"
+	GW_DomainCheck_FullMethodName      = "/gwconn.GW/DomainCheck"
+	GW_DomainDel_FullMethodName        = "/gwconn.GW/DomainDel"
+	GW_DomainList_FullMethodName       = "/gwconn.GW/DomainList"
 	GW_UserAdd_FullMethodName          = "/gwconn.GW/UserAdd"
 	GW_UserChange_FullMethodName       = "/gwconn.GW/UserChange"
 	GW_UserDel_FullMethodName          = "/gwconn.GW/UserDel"
@@ -63,6 +67,11 @@ type GWClient interface {
 	TargetChange(ctx context.Context, in *Target, opts ...grpc.CallOption) (*GeneralResp, error)
 	TargetDel(ctx context.Context, in *TargetDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	TargetList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
+	// domains
+	DomainAdd(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error)
+	DomainCheck(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error)
+	DomainDel(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error)
+	DomainList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	// users
 	UserAdd(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error)
 	UserChange(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -232,6 +241,42 @@ func (c *gWClient) TargetList(ctx context.Context, in *ListReq, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *gWClient) DomainAdd(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_DomainAdd_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) DomainCheck(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_DomainCheck_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) DomainDel(ctx context.Context, in *Domain, opts ...grpc.CallOption) (*GeneralResp, error) {
+	out := new(GeneralResp)
+	err := c.cc.Invoke(ctx, GW_DomainDel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *gWClient) DomainList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error) {
+	out := new(ListResponse)
+	err := c.cc.Invoke(ctx, GW_DomainList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *gWClient) UserAdd(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_UserAdd_FullMethodName, in, out, opts...)
@@ -324,6 +369,11 @@ type GWServer interface {
 	TargetChange(context.Context, *Target) (*GeneralResp, error)
 	TargetDel(context.Context, *TargetDelReq) (*GeneralResp, error)
 	TargetList(context.Context, *ListReq) (*ListResponse, error)
+	// domains
+	DomainAdd(context.Context, *Domain) (*GeneralResp, error)
+	DomainCheck(context.Context, *Domain) (*GeneralResp, error)
+	DomainDel(context.Context, *Domain) (*GeneralResp, error)
+	DomainList(context.Context, *ListReq) (*ListResponse, error)
 	// users
 	UserAdd(context.Context, *User) (*GeneralResp, error)
 	UserChange(context.Context, *User) (*GeneralResp, error)
@@ -382,6 +432,18 @@ func (UnimplementedGWServer) TargetDel(context.Context, *TargetDelReq) (*General
 }
 func (UnimplementedGWServer) TargetList(context.Context, *ListReq) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TargetList not implemented")
+}
+func (UnimplementedGWServer) DomainAdd(context.Context, *Domain) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DomainAdd not implemented")
+}
+func (UnimplementedGWServer) DomainCheck(context.Context, *Domain) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DomainCheck not implemented")
+}
+func (UnimplementedGWServer) DomainDel(context.Context, *Domain) (*GeneralResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DomainDel not implemented")
+}
+func (UnimplementedGWServer) DomainList(context.Context, *ListReq) (*ListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DomainList not implemented")
 }
 func (UnimplementedGWServer) UserAdd(context.Context, *User) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserAdd not implemented")
@@ -675,6 +737,78 @@ func _GW_TargetList_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GW_DomainAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Domain)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).DomainAdd(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_DomainAdd_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).DomainAdd(ctx, req.(*Domain))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_DomainCheck_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Domain)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).DomainCheck(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_DomainCheck_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).DomainCheck(ctx, req.(*Domain))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_DomainDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Domain)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).DomainDel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_DomainDel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).DomainDel(ctx, req.(*Domain))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _GW_DomainList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GWServer).DomainList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: GW_DomainList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GWServer).DomainList(ctx, req.(*ListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _GW_UserAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(User)
 	if err := dec(in); err != nil {
@@ -877,6 +1011,22 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TargetList",
 			Handler:    _GW_TargetList_Handler,
+		},
+		{
+			MethodName: "DomainAdd",
+			Handler:    _GW_DomainAdd_Handler,
+		},
+		{
+			MethodName: "DomainCheck",
+			Handler:    _GW_DomainCheck_Handler,
+		},
+		{
+			MethodName: "DomainDel",
+			Handler:    _GW_DomainDel_Handler,
+		},
+		{
+			MethodName: "DomainList",
+			Handler:    _GW_DomainList_Handler,
 		},
 		{
 			MethodName: "UserAdd",

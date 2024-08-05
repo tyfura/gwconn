@@ -52,11 +52,33 @@ message BridgeStats {
 }
 
 
-message BridgeTargetAct {
+message BridgeCmd {
+  string LogId = 1;
+  oneof cmd {
+    link link = 2;
+    cert cert = 3;
+    sys sys = 4;
+  }
+}
+
+message link {
   Action act = 1;
   ConnType typ = 2;
   string fqdn = 3;
   string addr = 4;
+}
+
+message cert {
+  Action act = 1;
+  string fqdn = 2;
+}
+
+message sys {
+  oneof cmd {
+    bool update = 1;
+    bool reload = 2;
+    bool restart = 3;
+  }
 }
 
 message NetworkStat {

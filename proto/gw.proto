@@ -29,6 +29,17 @@ service GW {
   rpc TargetDel(TargetDelReq) returns (GeneralResp) {}
   rpc TargetList(ListReq) returns (ListResponse) {}
 
+  // domains
+  rpc DomainAdd(Domain)  returns (GeneralResp) {}
+  rpc DomainCheck(Domain) returns (GeneralResp) {}
+  rpc DomainDel(Domain) returns (GeneralResp) {}
+  rpc DomainList(ListReq)  returns (ListResponse) {}
+
+  // certs
+//  rpc CertAdd() returns (GeneralResp) {}
+//  rpc CertRenew() returns (GeneralResp) {}
+//  rpc CertIvalidate() returns (GeneralResp) {}
+
 
   // users
   rpc UserAdd(User) returns (GeneralResp) {}
@@ -44,6 +55,11 @@ service GW {
 }
 
 message JoinStreamReq {}
+
+message Domain {
+  string fqdn = 1;
+  bool wildcard =2;
+}
 
 //message PolicyManageReq {
 //    Action act = 1;
