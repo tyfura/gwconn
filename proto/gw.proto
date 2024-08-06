@@ -25,7 +25,7 @@ service GW {
 
   // Links
   rpc LinkAdd(Link) returns (GeneralResp) {}
-  rpc LinkChange(Link) returns (GeneralResp) {}
+//  rpc LinkChange(Link) returns (GeneralResp) {}
   rpc LinkDel(LinkDelReq) returns (GeneralResp) {}
   rpc LinkList(ListReq) returns (ListResponse) {}
 
