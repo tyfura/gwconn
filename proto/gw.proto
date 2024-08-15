@@ -103,11 +103,6 @@ message Policies {
   repeated Policy policies = 1;
 }
 
-message Links {
-  repeated Link Links = 1;
-}
-
-
 enum BridgeAckT {
   Deny = 0;
   Acknowledge = 1;

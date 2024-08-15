@@ -16,10 +16,15 @@ service Bridge {
   rpc BStat(BridgeStat) returns (GeneralResp) {}
   rpc BLog(LogMsg) returns (GeneralResp) {}
   rpc BCmd(EmptyReq) returns (BridgeCmd) {}
+  rpc BLinks(LinkReq) returns (Links) {}
   rpc BAcmeChall(AcmeChallReq) returns (GeneralResp) {}
 }
 
 message EmptyReq {}
+
+message LinkReq {
+  bool updatesOnly = 1;
+}
 
 message RegisterReq {
     string bid = 1;

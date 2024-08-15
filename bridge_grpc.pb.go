@@ -25,6 +25,7 @@ const (
 	Bridge_BStat_FullMethodName      = "/gwconn.Bridge/BStat"
 	Bridge_BLog_FullMethodName       = "/gwconn.Bridge/BLog"
 	Bridge_BCmd_FullMethodName       = "/gwconn.Bridge/BCmd"
+	Bridge_BLinks_FullMethodName     = "/gwconn.Bridge/BLinks"
 	Bridge_BAcmeChall_FullMethodName = "/gwconn.Bridge/BAcmeChall"
 )
 
@@ -38,6 +39,7 @@ type BridgeClient interface {
 	BStat(ctx context.Context, in *BridgeStat, opts ...grpc.CallOption) (*GeneralResp, error)
 	BLog(ctx context.Context, in *LogMsg, opts ...grpc.CallOption) (*GeneralResp, error)
 	BCmd(ctx context.Context, in *EmptyReq, opts ...grpc.CallOption) (*BridgeCmd, error)
+	BLinks(ctx context.Context, in *LinkReq, opts ...grpc.CallOption) (*Links, error)
 	BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error)
 }
 
@@ -103,6 +105,15 @@ func (c *bridgeClient) BCmd(ctx context.Context, in *EmptyReq, opts ...grpc.Call
 	return out, nil
 }
 
+func (c *bridgeClient) BLinks(ctx context.Context, in *LinkReq, opts ...grpc.CallOption) (*Links, error) {
+	out := new(Links)
+	err := c.cc.Invoke(ctx, Bridge_BLinks_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *bridgeClient) BAcmeChall(ctx context.Context, in *AcmeChallReq, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, Bridge_BAcmeChall_FullMethodName, in, out, opts...)
@@ -122,6 +133,7 @@ type BridgeServer interface {
 	BStat(context.Context, *BridgeStat) (*GeneralResp, error)
 	BLog(context.Context, *LogMsg) (*GeneralResp, error)
 	BCmd(context.Context, *EmptyReq) (*BridgeCmd, error)
+	BLinks(context.Context, *LinkReq) (*Links, error)
 	BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error)
 	mustEmbedUnimplementedBridgeServer()
 }
@@ -147,6 +159,9 @@ func (UnimplementedBridgeServer) BLog(context.Context, *LogMsg) (*GeneralResp, e
 }
 func (UnimplementedBridgeServer) BCmd(context.Context, *EmptyReq) (*BridgeCmd, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BCmd not implemented")
+}
+func (UnimplementedBridgeServer) BLinks(context.Context, *LinkReq) (*Links, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BLinks not implemented")
 }
 func (UnimplementedBridgeServer) BAcmeChall(context.Context, *AcmeChallReq) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BAcmeChall not implemented")
@@ -272,6 +287,24 @@ func _Bridge_BCmd_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Bridge_BLinks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LinkReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BridgeServer).BLinks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Bridge_BLinks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BridgeServer).BLinks(ctx, req.(*LinkReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Bridge_BAcmeChall_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AcmeChallReq)
 	if err := dec(in); err != nil {
@@ -320,6 +353,10 @@ var Bridge_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BCmd",
 			Handler:    _Bridge_BCmd_Handler,
+		},
+		{
+			MethodName: "BLinks",
+			Handler:    _Bridge_BLinks_Handler,
 		},
 		{
 			MethodName: "BAcmeChall",

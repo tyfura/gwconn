@@ -55,9 +55,9 @@ message BridgeStats {
 message BridgeCmd {
   string LogId = 1;
   oneof cmd {
-    LinkCmd linkCmd = 2;
-    CertCmd certCmd = 3;
-    SysCmd sysCmd = 4;
+    bool update = 2;
+    bool refresh = 3;
+    bool restart = 4;
   }
 }
 
@@ -69,6 +69,10 @@ message Link {
   string policyName = 5;
 }
 
+message Links {
+  repeated Link Links = 1;
+}
+
 message LinkCmd {
   Action act = 1;
   Link link = 2;
@@ -78,14 +82,6 @@ message CertCmd {
   Action act = 1;
   string fqdn = 2;
   string brid = 3;
-}
-
-message SysCmd {
-  oneof cmd {
-    bool update = 1;
-    bool reload = 2;
-    bool restart = 3;
-  }
 }
 
 message NetworkStat {
