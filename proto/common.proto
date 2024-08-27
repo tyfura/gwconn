@@ -36,78 +36,6 @@ message Bridges {
   repeated BridgeInfo bridges = 1;
 }
 
-message BridgeStat {
-  int64 cpuNum = 1;
-  uint64 cpuTotal = 2;
-  uint64 cpuIdle = 3;
-  uint64 cpuUser = 4;
-  uint64 ramTotal = 5;
-  uint64 ramUsed = 6;
-  uint64 uptime = 7;
-  repeated NetworkStat net = 8;
-}
-
-message BridgeStats {
-  repeated BridgeStat stats = 1;
-}
-
-
-message BridgeCmd {
-  string LogId = 1;
-  oneof cmd {
-    bool update = 2;
-    bool refresh = 3;
-    bool restart = 4;
-  }
-}
-
-message Link {
-  ConnType typ = 1;
-  string brId = 2;
-  string fqdn = 3;
-  string addr = 4;
-  string policyName = 5;
-}
-
-message Links {
-  repeated Link Links = 1;
-}
-
-message LinkCmd {
-  Action act = 1;
-  Link link = 2;
-}
-
-message CertCmd {
-  Action act = 1;
-  string fqdn = 2;
-  string brid = 3;
-}
-
-message NetworkStat {
-  string interface =1;
-  uint64 rx = 2;
-  uint64 tx = 3;
-}
-
-message RouteStat {
-  string routeName = 1;
-  uint64 conns = 2;
-  uint64 trafOut = 3;
-  uint64 trafOutDelta = 4;
-  uint64 trafIn = 5;
-  uint64 trafInDelta = 6;
-}
-
-message LogMsg {
-  uint64 time = 1;
-  string task = 2;
-  string mgs = 3;
-}
-
-message Logs {
-  repeated LogMsg logs = 1;
-}
 
 message VpnReq {}
 
@@ -136,13 +64,5 @@ enum Action {
   Modify = 3;
 	Enable = 4;
 	Disable = 5;
-}
-
-enum ConnType {
-  NoConnType = 0;
-  Http = 1;
-  Https = 2;
-  Tcp = 3;
-  UnixSocket = 4;
 }
 

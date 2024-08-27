@@ -24,9 +24,6 @@ const (
 	GW_BridgeAck_FullMethodName     = "/gwconn.GW/BridgeAck"
 	GW_BridgeList_FullMethodName    = "/gwconn.GW/BridgeList"
 	GW_BridgeDel_FullMethodName     = "/gwconn.GW/BridgeDel"
-	GW_LinkAdd_FullMethodName       = "/gwconn.GW/LinkAdd"
-	GW_LinkDel_FullMethodName       = "/gwconn.GW/LinkDel"
-	GW_LinkList_FullMethodName      = "/gwconn.GW/LinkList"
 	GW_UserAdd_FullMethodName       = "/gwconn.GW/UserAdd"
 	GW_UserChange_FullMethodName    = "/gwconn.GW/UserChange"
 	GW_UserDel_FullMethodName       = "/gwconn.GW/UserDel"
@@ -43,11 +40,6 @@ type GWClient interface {
 	BridgeAck(ctx context.Context, in *BridgeAckReq, opts ...grpc.CallOption) (*GeneralResp, error)
 	BridgeList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	BridgeDel(ctx context.Context, in *BridgeInfo, opts ...grpc.CallOption) (*GeneralResp, error)
-	// Links
-	LinkAdd(ctx context.Context, in *Link, opts ...grpc.CallOption) (*GeneralResp, error)
-	// rpc LinkChange(Link) returns (GeneralResp) {}
-	LinkDel(ctx context.Context, in *LinkDelReq, opts ...grpc.CallOption) (*GeneralResp, error)
-	LinkList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error)
 	// users
 	UserAdd(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error)
 	UserChange(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error)
@@ -108,33 +100,6 @@ func (c *gWClient) BridgeDel(ctx context.Context, in *BridgeInfo, opts ...grpc.C
 	return out, nil
 }
 
-func (c *gWClient) LinkAdd(ctx context.Context, in *Link, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_LinkAdd_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gWClient) LinkDel(ctx context.Context, in *LinkDelReq, opts ...grpc.CallOption) (*GeneralResp, error) {
-	out := new(GeneralResp)
-	err := c.cc.Invoke(ctx, GW_LinkDel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *gWClient) LinkList(ctx context.Context, in *ListReq, opts ...grpc.CallOption) (*ListResponse, error) {
-	out := new(ListResponse)
-	err := c.cc.Invoke(ctx, GW_LinkList_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *gWClient) UserAdd(ctx context.Context, in *User, opts ...grpc.CallOption) (*GeneralResp, error) {
 	out := new(GeneralResp)
 	err := c.cc.Invoke(ctx, GW_UserAdd_FullMethodName, in, out, opts...)
@@ -181,11 +146,6 @@ type GWServer interface {
 	BridgeAck(context.Context, *BridgeAckReq) (*GeneralResp, error)
 	BridgeList(context.Context, *ListReq) (*ListResponse, error)
 	BridgeDel(context.Context, *BridgeInfo) (*GeneralResp, error)
-	// Links
-	LinkAdd(context.Context, *Link) (*GeneralResp, error)
-	// rpc LinkChange(Link) returns (GeneralResp) {}
-	LinkDel(context.Context, *LinkDelReq) (*GeneralResp, error)
-	LinkList(context.Context, *ListReq) (*ListResponse, error)
 	// users
 	UserAdd(context.Context, *User) (*GeneralResp, error)
 	UserChange(context.Context, *User) (*GeneralResp, error)
@@ -212,15 +172,6 @@ func (UnimplementedGWServer) BridgeList(context.Context, *ListReq) (*ListRespons
 }
 func (UnimplementedGWServer) BridgeDel(context.Context, *BridgeInfo) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method BridgeDel not implemented")
-}
-func (UnimplementedGWServer) LinkAdd(context.Context, *Link) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LinkAdd not implemented")
-}
-func (UnimplementedGWServer) LinkDel(context.Context, *LinkDelReq) (*GeneralResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LinkDel not implemented")
-}
-func (UnimplementedGWServer) LinkList(context.Context, *ListReq) (*ListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LinkList not implemented")
 }
 func (UnimplementedGWServer) UserAdd(context.Context, *User) (*GeneralResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserAdd not implemented")
@@ -337,60 +288,6 @@ func _GW_BridgeDel_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _GW_LinkAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Link)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GWServer).LinkAdd(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GW_LinkAdd_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).LinkAdd(ctx, req.(*Link))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _GW_LinkDel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LinkDelReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GWServer).LinkDel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GW_LinkDel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).LinkDel(ctx, req.(*LinkDelReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _GW_LinkList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GWServer).LinkList(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: GW_LinkList_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GWServer).LinkList(ctx, req.(*ListReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _GW_UserAdd_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(User)
 	if err := dec(in); err != nil {
@@ -489,18 +386,6 @@ var GW_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "BridgeDel",
 			Handler:    _GW_BridgeDel_Handler,
-		},
-		{
-			MethodName: "LinkAdd",
-			Handler:    _GW_LinkAdd_Handler,
-		},
-		{
-			MethodName: "LinkDel",
-			Handler:    _GW_LinkDel_Handler,
-		},
-		{
-			MethodName: "LinkList",
-			Handler:    _GW_LinkList_Handler,
 		},
 		{
 			MethodName: "UserAdd",

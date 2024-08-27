@@ -18,12 +18,6 @@ service GW {
   rpc BridgeList(ListReq) returns (ListResponse) {}
   rpc BridgeDel(BridgeInfo) returns (GeneralResp) {}
 
-  // Links
-  rpc LinkAdd(Link) returns (GeneralResp) {}
-//  rpc LinkChange(Link) returns (GeneralResp) {}
-  rpc LinkDel(LinkDelReq) returns (GeneralResp) {}
-  rpc LinkList(ListReq) returns (ListResponse) {}
-
 
   // users
   rpc UserAdd(User) returns (GeneralResp) {}
@@ -35,25 +29,6 @@ service GW {
 message JoinStreamReq {}
 
 
-message Domain {
-  string fqdn = 1;
-  bool wildcard =2;
-}
-
-message LinkDelReq {
-  string fqdn = 1;
-  string brId = 2;
-}
-
-//message PolicyManageReq {
-//    Action act = 1;
-//    Policy policy = 2;
-//}
-
-//message UserManageReq {
-//    Action act = 1;
-//    User user = 2;
-//}
 
 message User {
   string uname = 1;
@@ -68,19 +43,11 @@ message ListResponse {
   oneof list {
     Users users = 4;
     Bridges bridges = 5;
-    Logs logs = 6;
-    BridgeStats bridgeStats = 7;
-    Policies policies = 8;
-    Links Links = 9;
   }
 }
 
 message Users {
   repeated User users = 1;
-}
-
-message Policies {
-  repeated Policy policies = 1;
 }
 
 enum BridgeAckT {
@@ -95,17 +62,6 @@ message BridgeAckReq {
 }
 
 
-enum PolicyType {
-  PublicAccess = 0;
-  AllowList = 1;
-  BlockList = 2;
-}
-
-message Policy {
-  string name = 1;
-  PolicyType type = 2;
-  repeated string ips = 3;
-}
 
 message DelReq {
   string name = 1;

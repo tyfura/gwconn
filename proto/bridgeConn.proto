@@ -19,9 +19,6 @@ service BridgeConn {
 message EmptyReq {}
 
 
-message LinkReq {
-  bool updatesOnly = 1;
-}
 
 message RegisterReq {
     string bid = 1;
