@@ -16,12 +16,7 @@ service GW {
   rpc BridgeListNew(ListReq) returns (ListResponse) {} 
   rpc BridgeAck(BridgeAckReq) returns (GeneralResp) {}
   rpc BridgeList(ListReq) returns (ListResponse) {}
-  rpc BridgeChange(BridgeInfo) returns (GeneralResp) {}
   rpc BridgeDel(BridgeInfo) returns (GeneralResp) {}
-  rpc BridgeLogs(ListReq) returns (ListResponse) {}
-  rpc BridgeRouteInfo(ListReq) returns (ListResponse) {}
-  rpc BridgeSystemStat(ListReq) returns (ListResponse) {}
-  rpc BridgeStreamLogs(JoinStreamReq) returns (stream LogMsg) {}
 
   // Links
   rpc LinkAdd(Link) returns (GeneralResp) {}
@@ -29,37 +24,22 @@ service GW {
   rpc LinkDel(LinkDelReq) returns (GeneralResp) {}
   rpc LinkList(ListReq) returns (ListResponse) {}
 
-  // domains
-  rpc DomainAdd(Domain)  returns (GeneralResp) {}
-  rpc DomainCheck(Domain) returns (GeneralResp) {}
-  rpc DomainDel(Domain) returns (GeneralResp) {}
-  rpc DomainList(ListReq)  returns (ListResponse) {}
-
-  // certs
-//  rpc CertAdd() returns (GeneralResp) {}
-//  rpc CertRenew() returns (GeneralResp) {}
-//  rpc CertIvalidate() returns (GeneralResp) {}
-
 
   // users
   rpc UserAdd(User) returns (GeneralResp) {}
   rpc UserChange(User) returns (GeneralResp) {}
   rpc UserDel(DelReq) returns (GeneralResp) {}
   rpc UserList(ListReq) returns (ListResponse) {}
-
-  // IP policies
-  rpc PolicyAdd(Policy) returns (GeneralResp) {}
-  rpc PolicyChange(Policy) returns (GeneralResp) {}
-  rpc PolicyDel(DelReq) returns (GeneralResp) {}
-  rpc PolicyList(ListReq) returns (ListResponse) {}
 }
 
 message JoinStreamReq {}
+
 
 message Domain {
   string fqdn = 1;
   bool wildcard =2;
 }
+
 message LinkDelReq {
   string fqdn = 1;
   string brId = 2;

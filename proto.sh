@@ -3,4 +3,4 @@
 protoc --proto_path=proto \
        --go_out=. --go_opt=paths=source_relative \
        --go-grpc_out=. --go-grpc_opt=paths=source_relative \
-       ./proto/common.proto ./proto/bridge.proto ./proto/gw.proto
+       ./proto/common.proto ./proto/bridgeConn.proto ./proto/gw.proto
